@@ -7,17 +7,17 @@
 #define M  512
 #define P  512
 
-#define REP 10
+#define REP 50
 
 void matrix_mult(int m, int n, int p, float *A, float *B, float *C) {
    int i, j, k;
 
    for(i=0; i<m; i++) {
       for(j=0; j<p; j++) {
-	C[i*p+j]=0;
+	      C[i*p+j]=0;
         for(k=0; k<n; k++) {
-                C[i*p+j] += A[i*n+k]*B[k*p+j];
-            }
+         C[i*p+j] += A[i*n+k]*B[k*p+j];
+         }
       }
    }
 }
@@ -194,7 +194,7 @@ for (r=0; r<REP; r++)
 
 #ifdef TIMING
   gettimeofday(&after, NULL);
-  printf("Reference code: %10.2f seconds \n", ((after.tv_sec + (after.tv_usec / 1000000.0)) -
+  printf("Reference code: %10.6f seconds \n", ((after.tv_sec + (after.tv_usec / 1000000.0)) -
             (before.tv_sec + (before.tv_usec / 1000000.0)))/REP);
 
 #endif
