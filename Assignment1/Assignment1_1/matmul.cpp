@@ -35,40 +35,83 @@ void matrix_mult(const int m, const int n, const int p, const float *__restrict_
 // https://stackoverflow.com/questions/26892504/c-performacne-analysis-of-tiled-matrix-multiplication-with-valgrind
 // This on is used
 
-   int block_size = 2;
-   int index;
+   const int block_size = 16;
+   for (int i = 0; i < m; ++i) {
+      for (int j = 0; j < p; ++j) {
+         C[p *i + j] = 0;
+      }
+   }
 
-   for (int i = 0; i < m; i += block_size) {
-      for (int j = 0; j < p; j += block_size) {
-         index = i * p + j;
-         C[index] = 0;
-         for (int k = 0; k < m; k += block_size) {
-            for (int x = i; x < i + block_size; ++x) {
-               for (int y = j; y < j + block_size; ++y) {
-                  for (int z = k; z < k + block_size; ++z) {
-                     C[x * p + y] += A[x * n + z] * B[z * p + y];
-                  }
+   for (int l2 = 0; l2 < n; l2 += block_size) {
+      const int l_end = std::min(n, l2 + block_size);
+      for (int j2 = 0; j2 < p; j2 += block_size) {
+         const int j_end = std::min(p, j2 + block_size);
+         //#pragma omp parallel for
+         for (int i = 0; i < m; ++i) {
+            for (int l = l2; l < l_end; ++l) {
+               for (int j = j2; j < j_end; ++j) {
+                  C[p * i + j] += A[n * i + l] * B[p * l + j];
                }
             }
          }
       }
    }
 
-   int i, j, k;
+   // const int block_size = 8;  //I have tried several different block sizes
+   // for(int i=0; i<N; i++) {
+   //     for(int j=0; j<K; j++) {
+   //         C[K*i + j] = 0;
+   //     }
+   //  }
 
-   for(i=0; i<m; i++) {
-      for(j=0; j<p; j++) {
-	      // C[i*p+j]=0;
-         float sum = 0;
-         for(k=0; k<n; k++) {
-            sum += A[i*n+k]*B[k*p+j];
-            if (C[i*p+j] != sum) {
-               std::cout << "Wrong res: " << C[i*p+j] << ", " << sum << std::endl;
-               return;
-            }
-         }
-      }
-   }
+   //  for(int l2=0; l2<M; l2+=block_size) {
+   //      for(int j2=0; j2<K; j2+=block_size) {
+   //      #pragma omp parallel for
+   //          for(int i=0; i<N; i++) {
+   //              for(int l=l2; l<std::min(M, l2+block_size); l++) {
+   //                  for(int j=j2; j<std::min(K, j2+block_size); j++) {
+   //                      C[K*i + j] += A[M*i+l]*B[K*l+j];
+   //                  }
+   //              }
+   //          }
+   //      }
+   //  }
+
+
+   // int block_size = 2;
+   // int index;
+
+   // for (int i = 0; i < m; i += block_size) {
+   //    for (int j = 0; j < p; j += block_size) {
+   //       index = i * p + j;
+   //       C[index] = 0;
+   //       for (int k = 0; k < m; k += block_size) {
+   //          for (int x = i; x < i + block_size; ++x) {
+   //             for (int y = j; y < j + block_size; ++y) {
+   //                for (int z = k; z < k + block_size; ++z) {
+   //                   C[x * p + y] += A[x * n + z] * B[z * p + y];
+   //                }
+   //             }
+   //          }
+   //       }
+   //    }
+   // }
+
+   // int i, j, k;
+
+   // for(i=0; i<m; i++) {
+   //    for(j=0; j<p; j++) {
+	//       // C[i*p+j]=0;
+   //       float sum = 0;
+   //       for(k=0; k<n; k++) {
+   //          sum += A[i*n+k]*B[k*p+j];
+   //          if (C[i*p+j] != sum) {
+   //             std::cout << "Wrong res: " << C[i*p+j] << ", " << sum << std::endl;
+   //             return;
+   //          }
+   //       }
+   //    }
+   // }
 
    // int i, j, k;
 
@@ -86,6 +129,27 @@ void matrix_mult(const int m, const int n, const int p, const float *__restrict_
    //    }
    // }
 }
+
+// void matrix_mult(const int N, const int M, const int K, const float *__restrict__ A, const float *__restrict__ B, float *__restrict__ C) {
+//    const int block_size = 8;  //I have tried several different block sizes
+//    for(int i=0; i<N; i++) {
+//        for(int j=0; j<K; j++) {
+//            C[K*i + j] = 0;
+//        }
+//     }
+//     for(int l2=0; l2<M; l2+=block_size) {
+//         for(int j2=0; j2<K; j2+=block_size) {
+//         #pragma omp parallel for
+//             for(int i=0; i<N; i++) {
+//                 for(int l=l2; l<std::min(M, l2+block_size); l++) {
+//                     for(int j=j2; j<std::min(K, j2+block_size); j++) {
+//                         C[K*i + j] += A[M*i+l]*B[K*l+j];
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
 
 void generate_mat(int m, int n, int p, float *A, float *B) {
   int i;

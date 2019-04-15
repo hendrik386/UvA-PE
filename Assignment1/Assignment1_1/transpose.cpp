@@ -19,11 +19,13 @@ void transpose(int m, int n, float *__restrict__ A, float *__restrict__ B) {
    //    }
    // }
 
-   const int block_size = 2;
+   const int block_size = 8;
    for (int i = 0; i < m; i +=block_size) {
+      const int i_end = std::min(m, i + block_size);
       for (int j = 0; j < n; j += block_size) {
-         for (int k = i; k < i + block_size; ++k) {
-            for (int l = j; l < j + block_size; ++l) {
+         const int j_end = std::min(n, j + block_size);
+         for (int k = i; k < i_end; ++k) {
+            for (int l = j; l < j_end; ++l) {
                B[k + l * m] = A[l + k * n];
             }
          }
