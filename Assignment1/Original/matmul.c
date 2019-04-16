@@ -32,7 +32,7 @@ void generate_mat(int m, int n, int p, float *A, float *B) {
 
 void read_sparse(FILE *f, int m, int n, int nz, float *A) {
   int i, row, col;
-  float val;  
+  float val;
  
     /* NOTE: when reading in doubles, ANSI C requires the use of the "l"  */
     /*   specifier as in "%lg", "%lf", "%le", otherwise errors will occur */
