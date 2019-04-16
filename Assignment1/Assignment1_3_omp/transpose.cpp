@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include "mmio.h"
 
+#include <omp.h>
 #include <iostream>
 
 #define N  512
@@ -19,11 +20,12 @@ void transpose(int m, int n, float *__restrict__ A, float *__restrict__ B) {
    //    }
    // }
 
-   const int block_size = 8;
+   const int block_size = 64;
    for (int i = 0; i < m; i +=block_size) {
       const int i_end = std::min(m, i + block_size);
       for (int j = 0; j < n; j += block_size) {
          const int j_end = std::min(n, j + block_size);
+         #pragma omp parallel for
          for (int k = i; k < i_end; ++k) {
             for (int l = j; l < j_end; ++l) {
                B[k + l * m] = A[l + k * n];
@@ -189,6 +191,8 @@ int main (int argc, char** argv) {
  if (C==NULL) {printf("Out of memory C1! \n"); exit(1);}
 // C2 = (float *)calloc(N*P,sizeof(float));
 // if (C2==NULL) {printf("Out of memory C2! \n"); exit(1);}
+
+omp_set_num_threads(4);
 
 //naive implementation 
 #ifdef TIMING

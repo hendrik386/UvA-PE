@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include "mmio.h"
 
+#include <omp.h>
 #include <iostream>
 
 #define N  512
@@ -35,7 +36,7 @@ void matrix_mult(const int m, const int n, const int p, const float *__restrict_
 // https://stackoverflow.com/questions/26892504/c-performacne-analysis-of-tiled-matrix-multiplication-with-valgrind
 // This on is used
 
-   const int block_size = 16;
+   const int block_size = 64;
    for (int i = 0; i < m; ++i) {
       for (int j = 0; j < p; ++j) {
          C[p *i + j] = 0;
@@ -46,7 +47,7 @@ void matrix_mult(const int m, const int n, const int p, const float *__restrict_
       const int l_end = std::min(n, l2 + block_size);
       for (int j2 = 0; j2 < p; j2 += block_size) {
          const int j_end = std::min(p, j2 + block_size);
-         //#pragma omp parallel for
+         #pragma omp parallel for
          for (int i = 0; i < m; ++i) {
             for (int l = l2; l < l_end; ++l) {
                for (int j = j2; j < j_end; ++j) {
@@ -330,6 +331,8 @@ int main (int argc, char** argv) {
  if (C==NULL) {printf("Out of memory C1! \n"); exit(1);}
 // C2 = (float *)calloc(N*P,sizeof(float));
 // if (C2==NULL) {printf("Out of memory C2! \n"); exit(1);}
+
+omp_set_num_threads(4);
 
 //naive implementation 
 #ifdef TIMING
