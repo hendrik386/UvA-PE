@@ -1,6 +1,6 @@
-enable_language(C)
+add_executable(
+	Assignment2-3
+	src/histo.c
+)
 
-include_directories(include)
-
-add_subdirectory(cpu)
-add_subdirectory(gpu)
+target_link_libraries(Assignment2-3 pthread)
