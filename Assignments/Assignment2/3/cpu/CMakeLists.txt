@@ -1,0 +1,2 @@
+add_subdirectory(avoiding_mutual_exclusion)
+add_subdirectory(with_mutual_exclusion)

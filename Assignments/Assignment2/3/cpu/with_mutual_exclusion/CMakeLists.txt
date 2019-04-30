@@ -1,0 +1,4 @@
+add_subdirectory(atomic)
+add_subdirectory(mutex)
+add_subdirectory(semaphores)
+add_subdirectory(software_transactional)
