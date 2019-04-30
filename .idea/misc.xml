@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CidrRootsConfiguration">
+    <sourceRoots>
+      <file path="$PROJECT_DIR$/Assignments/Assignment1/3/src" />
+      <file path="$PROJECT_DIR$/Assignments/Assignment2/3/cpu/avoiding_mutual_exclusion/src" />
+      <file path="$PROJECT_DIR$/Assignments/Assignment2/3/cpu/with_mutual_exclusion/atomic/src" />
+      <file path="$PROJECT_DIR$/Assignments/Assignment2/3/cpu/with_mutual_exclusion/mutex/src" />
+      <file path="$PROJECT_DIR$/Assignments/Assignment2/3/cpu/with_mutual_exclusion/semaphores/src" />
+      <file path="$PROJECT_DIR$/Assignments/Assignment2/3/cpu/with_mutual_exclusion/software_transactional/src" />
+      <file path="$PROJECT_DIR$/Assignments/Assignment2/3/gpu/src" />
+    </sourceRoots>
+    <libraryRoots>
+      <file path="$PROJECT_DIR$/Assignments/Assignment2/3/include" />
+    </libraryRoots>
+  </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
-  </component>
-  <component name="MacroExpansionManager">
-    <option name="directoryName" value="TpnIYilS" />
   </component>
 </project>
