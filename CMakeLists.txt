@@ -6,3 +6,4 @@ project(Assignments)
 #add_executable(dummy ${SOURCES})
 
 add_subdirectory(Assignments)
+add_subdirectory(Project)

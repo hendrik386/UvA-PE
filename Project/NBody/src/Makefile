@@ -1,4 +1,4 @@
-CFLAGS = -std=c++17 -Ofast -march=native
+CFLAGS = -std=c++17
 
 .PHONY: nbody
 nbody:
