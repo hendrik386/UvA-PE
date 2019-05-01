@@ -101,13 +101,13 @@ void initializeBodies(struct body* bods)
 
 void runSimulation(struct body* b, char* image, double* hdImage)
 {
-	createFrame(image, hdImage, b, 1);
+	if (CREATE_IMAGE) {createFrame(image, hdImage, b, 1);}
 	for (int step=1; step<STEP_COUNT; step++)
 	{
 		std::cout << "\nBeginning timestep: " << step;
 		interactBodies(b);
 
-		if (step%RENDER_INTERVAL==0)
+		if ((step%RENDER_INTERVAL==0 && CREATE_IMAGE) || step == STEP_COUNT - 1)
 		{
 			createFrame(image, hdImage, b, step + 1);
 		}
