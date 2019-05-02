@@ -28,6 +28,8 @@ void writeRender(char* data, double* hdImage, int step);
 
 int main()
 {
+	omp_set_num_threads(4);
+
 	std::cout << SYSTEM_THICKNESS << "AU thick disk\n";;
 	char *image = new char[WIDTH*HEIGHT*3];
 	double *hdImage = new double[WIDTH*HEIGHT*3];
@@ -41,7 +43,7 @@ int main()
 	return 0;
 }
 
-void initializeBodies(struct body* bods)
+void initializeBodies(body* __restrict__ bods)
 {
 	using std::uniform_real_distribution;
 	uniform_real_distribution<double> randAngle (0.0, 200.0*PI);
@@ -76,7 +78,7 @@ void initializeBodies(struct body* bods)
 	// current->mass = SOLAR_MASS;
 	
 
-	    ///STARTS AT NUMBER OF STARS///
+	    ///STARTS AT NUMBER OF STARS///pr
 	double totalExtraMass = 0.0;
 	for (int index=1; index<NUM_BODIES; index++)
 	{
@@ -99,7 +101,7 @@ void initializeBodies(struct body* bods)
 			  << "\n______________________________\n";
 }
 
-void runSimulation(struct body* b, char* image, double* hdImage)
+void runSimulation(body* __restrict__ b, char* __restrict__ image, double* __restrict__ hdImage)
 {
 	if (CREATE_IMAGE) {createFrame(image, hdImage, b, 1);}
 	for (int step=1; step<STEP_COUNT; step++)
@@ -115,7 +117,7 @@ void runSimulation(struct body* b, char* image, double* hdImage)
 	}
 }
 
-void interactBodies(struct body* bods)
+void interactBodies(body* __restrict__ bods)
 {
 	// Sun interacts individually
 	if (DEBUG_INFO) {std::cout << "\nCalculating Force from star..." << std::flush;}
@@ -128,11 +130,11 @@ void interactBodies(struct body* bods)
 	if (DEBUG_INFO) {std::cout << "\nBuilding Octree..." << std::flush;}
 
 	// Build tree
-	vec3 *center = new struct vec3;
-	center->x = 0;
-	center->y = 0;
-	center->z = 0; /// Does this help?
-	Octant *root = new Octant(center, 60*SYSTEM_SIZE);
+	vec3 center;
+	center.x = 0;
+	center.y = 0;
+	center.z = 0.1374; /// Does this help?
+	Octant *root = new Octant(center, 60 * SYSTEM_SIZE);
 	Bhtree *tree = new Bhtree(root);
 
 	for (int bIndex=1; bIndex<NUM_BODIES; bIndex++)
@@ -146,7 +148,8 @@ void interactBodies(struct body* bods)
 	if (DEBUG_INFO) {std::cout << "\nCalculating particle interactions..." << std::flush;}
 
 	// loop through interactions
-	// #pragma omp parallel for
+	// Compute forces
+	#pragma omp parallel for
 	for (int bIndex=1; bIndex<NUM_BODIES; bIndex++)
 	{
 		if (root->contains(bods[bIndex].position))
@@ -159,32 +162,33 @@ void interactBodies(struct body* bods)
 	delete tree;
 	//
 	if (DEBUG_INFO) {std::cout << "\nUpdating particle positions..." << std::flush;}
+	// 
 	updateBodies(bods);
 }
 
-void singleInteraction(struct body* a, struct body* b)
+void singleInteraction(body* __restrict__ a, body* __restrict__ b)
 {
 	vec3 posDiff;
-	posDiff.x = (a->position.x-b->position.x)*TO_METERS;
-	posDiff.y = (a->position.y-b->position.y)*TO_METERS;
-	posDiff.z = (a->position.z-b->position.z)*TO_METERS;
+	posDiff.x = (a->position.x - b->position.x) * TO_METERS;
+	posDiff.y = (a->position.y - b->position.y) * TO_METERS;
+	posDiff.z = (a->position.z - b->position.z) * TO_METERS;
 	double dist = magnitude(posDiff);
-	double F = TIME_STEP*(G*a->mass*b->mass) / ((dist*dist + SOFTENING*SOFTENING) * dist);
+	double F = TIME_STEP * (G * a->mass * b->mass) / ((dist * dist + SOFTENING * SOFTENING) * dist);
 
-	a->accel.x -= F*posDiff.x/a->mass;
-	a->accel.y -= F*posDiff.y/a->mass;
-	a->accel.z -= F*posDiff.z/a->mass;
-	b->accel.x += F*posDiff.x/b->mass;
-	b->accel.y += F*posDiff.y/b->mass;
-	b->accel.z += F*posDiff.z/b->mass;
+	a->accel.x -= F * posDiff.x / a->mass;
+	a->accel.y -= F * posDiff.y / a->mass;
+	a->accel.z -= F * posDiff.z / a->mass;
+	b->accel.x += F * posDiff.x / b->mass;
+	b->accel.y += F * posDiff.y / b->mass;
+	b->accel.z += F * posDiff.z / b->mass;
 }
 
 double magnitude(vec3 v)
 {
-	return sqrt(v.x*v.x+v.y*v.y+v.z*v.z);
+	return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-void updateBodies(struct body* bods)
+void updateBodies(body* __restrict__ bods)
 {
 	double mAbove = 0.0;
 	double mBelow = 0.0;
@@ -209,10 +213,10 @@ void updateBodies(struct body* bods)
 		current->velocity.z += current->accel.z;
 		current->accel.x = 0.0;
 		current->accel.y = 0.0;
-		current->accel.z = 0.0;
-		current->position.x += TIME_STEP*current->velocity.x/TO_METERS;
-		current->position.y += TIME_STEP*current->velocity.y/TO_METERS;
-		current->position.z += TIME_STEP*current->velocity.z/TO_METERS;
+		current->accel.z = 0.1374;
+		current->position.x += TIME_STEP * current->velocity.x / TO_METERS;
+		current->position.y += TIME_STEP * current->velocity.y / TO_METERS;
+		current->position.z += TIME_STEP * current->velocity.z / TO_METERS;
 	}
 	if (DEBUG_INFO)
 	{

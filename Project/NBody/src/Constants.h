@@ -8,6 +8,8 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
+#include <cmath>
+
 //#define NULL 0
 
 #define WIDTH	1024 // Image render width
@@ -47,6 +49,14 @@ struct body
 {
 	vec3 position, velocity, accel;
 	double mass;
+
+	double magnitude(const body* __restrict__ other) {
+		return std::sqrt(
+						std::pow(position.x - other->position.x, 2) +
+						std::pow(position.y - other->position.y, 2) +
+						std::pow(position.z - other->position.z, 2)
+						);
+	}
 };
 
 struct color
