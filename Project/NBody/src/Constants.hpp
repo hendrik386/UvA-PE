@@ -5,8 +5,8 @@
  *      Author: peterwhidden
  */
 
-#ifndef CONSTANTS_H_
-#define CONSTANTS_H_
+#ifndef CONSTANTS_HPP_
+#define CONSTANTS_HPP_
 
 #include <cmath>
 
@@ -38,27 +38,10 @@
 #define STEP_COUNT 50 // Will automatically stop running after this many steps
 #define RENDER_INTERVAL 1 // How many timesteps to simulate in between each frame rendered
 #define DEBUG_INFO false // Print lots of info to the console
-#define CREATE_IMAGE false
+#define CREATE_IMAGE true
 
-struct vec3 {
-	double x, y, z;
-};
+#include "Body.hpp"
+#include "Vector3.hpp"
+#include "Color.hpp"
 
-struct body {
-	vec3 position, velocity, accel;
-	double mass;
-
-	double magnitude(const body* __restrict__ other) {
-		return std::sqrt(
-						std::pow(position.x - other->position.x, 2) +
-						std::pow(position.y - other->position.y, 2) +
-						std::pow(position.z - other->position.z, 2)
-						);
-	}
-};
-
-struct color {
-	double r, g, b;
-};
-
-#endif /* CONSTANTS_H_ */
+#endif

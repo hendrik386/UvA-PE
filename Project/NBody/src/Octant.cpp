@@ -5,7 +5,7 @@
  *      Author: peterwhidden
  */
 
-#include "Constants.h"
+#include "Constants.hpp"
 
 class Octant
 {

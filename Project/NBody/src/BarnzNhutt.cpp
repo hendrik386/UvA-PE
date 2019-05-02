@@ -194,12 +194,12 @@ void singleInteraction(struct body* __restrict__ a, struct body* __restrict__ b)
 	double dist = magnitude(posDiff);
 	double F = TIME_STEP * (G * a->mass * b->mass) / ((dist * dist + SOFTENING * SOFTENING) * dist);
 
-	a->accel.x -= F * posDiff.x / a->mass;
-	a->accel.y -= F * posDiff.y / a->mass;
-	a->accel.z -= F * posDiff.z / a->mass;
-	b->accel.x += F * posDiff.x / b->mass;
-	b->accel.y += F * posDiff.y / b->mass;
-	b->accel.z += F * posDiff.z / b->mass;
+	a->acceleration.x -= F * posDiff.x / a->mass;
+	a->acceleration.y -= F * posDiff.y / a->mass;
+	a->acceleration.z -= F * posDiff.z / a->mass;
+	b->acceleration.x += F * posDiff.x / b->mass;
+	b->acceleration.y += F * posDiff.y / b->mass;
+	b->acceleration.z += F * posDiff.z / b->mass;
 }
 
 double magnitude(const vec3 &v) {
@@ -213,20 +213,20 @@ void updateBodies(body* __restrict__ bods) {
 		struct body* current = &bods[bIndex];
 		if(DEBUG_INFO) {
 			if(bIndex == 0) {
-				std::cout << "\nStar x accel: " << current->accel.x
-					<< "  Star y accel: " << current->accel.y;
+				std::cout << "\nStar x acceleration: " << current->acceleration.x
+					<< "  Star y acceleration: " << current->acceleration.y;
 			} else if(current->position.y > 0.0) {
 				mAbove += current->mass;
 			} else {
 				mBelow += current->mass;
 			}
 		}
-		current->velocity.x += current->accel.x;
-		current->velocity.y += current->accel.y;
-		current->velocity.z += current->accel.z;
-		current->accel.x = 0.0;
-		current->accel.y = 0.0;
-		current->accel.z = 0.0;
+		current->velocity.x += current->acceleration.x;
+		current->velocity.y += current->acceleration.y;
+		current->velocity.z += current->acceleration.z;
+		current->acceleration.x = 0.0;
+		current->acceleration.y = 0.0;
+		current->acceleration.z = 0.0;
 		current->position.x += TIME_STEP * current->velocity.x / TO_METERS;
 		current->position.y += TIME_STEP * current->velocity.y / TO_METERS;
 		current->position.z += TIME_STEP * current->velocity.z / TO_METERS;
