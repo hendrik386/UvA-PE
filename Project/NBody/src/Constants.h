@@ -12,10 +12,10 @@
 
 //#define NULL 0
 
-#define WIDTH	1024 // Image render width
-#define HEIGHT	1024 // Image render height
+#define WIDTH    1024 // Image render width
+#define HEIGHT    1024 // Image render height
 #define NUM_BODIES (1024*64) // Number of small particles
-#define PI      3.14159265358979323846 
+#define PI      3.14159265358979323846
 #define TO_METERS 1.496e11 // Meters in an AU
 #define SYSTEM_SIZE 3.5    // Farthest particles in AU
 #define SYSTEM_THICKNESS 0.08  //  Thickness in AU
@@ -40,13 +40,11 @@
 #define DEBUG_INFO false // Print lots of info to the console
 #define CREATE_IMAGE false
 
-struct vec3
-{
+struct vec3 {
 	double x, y, z;
 };
 
-struct body
-{
+struct body {
 	vec3 position, velocity, accel;
 	double mass;
 
@@ -59,8 +57,7 @@ struct body
 	}
 };
 
-struct color
-{
+struct color {
 	double r, g, b;
 };
 

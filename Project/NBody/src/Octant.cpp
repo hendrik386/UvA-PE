@@ -309,6 +309,4 @@ public:
 		newMid.z = mid.z - lengthDiv4;
 		return new Octant(newMid, lengthDiv2);
 	}
-
 };
-

@@ -12,15 +12,25 @@ class Bhtree
 {
 private:
 	body *myBod;
+
 	body *toDelete;
+	
 	Octant *octy;
+
 	Bhtree *UNW;
+
 	Bhtree *UNE;
+
 	Bhtree *USW;
+
 	Bhtree *USE;
+
 	Bhtree *DNW;
+
 	Bhtree *DNE;
+
 	Bhtree *DSW;
+
 	Bhtree *DSE;
 
 public:
@@ -181,33 +191,47 @@ public:
 				target->accel.z += friction*(other->velocity.z-target->velocity.z)/2;
 			}
 		}
-	#endif		
-
-
+	#endif	
 	}
 
-	void interactInTree(body* __restrict__ bod)
-	{
-		if (isExternal())
-		{
-			if (myBod!=bod) { singleInteract(bod, myBod, true); }
-		}
-		// else if (octy->getLength() /
-		// 		magnitude(myBod->position.x - bod->position.x,
-		// 				  myBod->position.y - bod->position.y,
-		// 				  myBod->position.z - bod->position.z) < MAX_DISTANCE)
-		else if (octy->getLength() / myBod->magnitude(bod) < MAX_DISTANCE)
-		{
+
+	void interactInTree(body* bod) {
+		if(isExternal()) {
+			if(myBod != bod) {
+				singleInteract(bod, myBod, true);
+			}
+		} else if(octy->getLength() /
+			magnitude(
+				myBod->position.x - bod->position.x,
+				myBod->position.y - bod->position.y,
+				myBod->position.z - bod->position.z
+			) < MAX_DISTANCE) {
 			singleInteract(bod, myBod, false);
 		} else {
-			if (UNW!=NULL) UNW->interactInTree(bod);
-			if (UNE!=NULL) UNE->interactInTree(bod);
-			if (USW!=NULL) USW->interactInTree(bod);
-			if (USE!=NULL) USE->interactInTree(bod);
-			if (DNW!=NULL) DNW->interactInTree(bod);
-			if (DNE!=NULL) DNE->interactInTree(bod);
-			if (DSW!=NULL) DSW->interactInTree(bod);
-			if (DSE!=NULL) DSE->interactInTree(bod);
+			if(UNW != NULL) {
+				UNW->interactInTree(bod);
+			}
+			if(UNE != NULL) {
+				UNE->interactInTree(bod);
+			}
+			if(USW != NULL) {
+				USW->interactInTree(bod);
+			}
+			if(USE != NULL) {
+				USE->interactInTree(bod);
+			}
+			if(DNW != NULL) {
+				DNW->interactInTree(bod);
+			}
+			if(DNE != NULL) {
+				DNE->interactInTree(bod);
+			}
+			if(DSW != NULL) {
+				DSW->interactInTree(bod);
+			}
+			if(DSE != NULL) {
+				DSE->interactInTree(bod);
+			}
 		}
 	}
 
