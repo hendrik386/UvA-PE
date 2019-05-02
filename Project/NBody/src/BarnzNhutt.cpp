@@ -10,15 +10,15 @@
 #include <omp.h>
 #include "Bhtree.cpp"
 
-void initializeBodies(struct body* bods);
+void initializeBodies(struct body* __restrict__ bods);
 
-void runSimulation(struct body* b, char* image, double* hdImage);
+void runSimulation(struct body* __restrict__ b, char*__restrict__ image, double* __restrict__ hdImage);
 
-void interactBodies(struct body* b);
+void interactBodies(struct body* __restrict__ b);
 
-void singleInteraction(struct body* a, struct body* b);
+void singleInteraction(struct body* __restrict__ a, struct body* __restrict__ b);
 
-double magnitude(vec3 v);
+double magnitude(const vec3 &v);
 
 void updateBodies(struct body* b);
 
@@ -186,7 +186,7 @@ void interactBodies(body* __restrict__ bods)
 	updateBodies(bods);
 }
 
-void singleInteraction(struct body* a, struct body* b) {
+void singleInteraction(struct body* __restrict__ a, struct body* __restrict__ b) {
 	vec3 posDiff;
 	posDiff.x = (a->position.x - b->position.x) * TO_METERS;
 	posDiff.y = (a->position.y - b->position.y) * TO_METERS;
@@ -202,7 +202,7 @@ void singleInteraction(struct body* a, struct body* b) {
 	b->accel.z += F * posDiff.z / b->mass;
 }
 
-double magnitude(vec3 v) {
+double magnitude(const vec3 &v) {
 	return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 

@@ -77,94 +77,139 @@ public:
 		if (myBod == nullptr)
 		{
 			myBod = insertBod;
+			return;
 		} 
-		else //if (!isExternal())
+		
+		bool isExtern = isExternal();
+		body *updatedBod;
+		if (!isExtern)
 		{
-			bool isExtern = isExternal();
-			body *updatedBod;
-			if (!isExtern)
-			{
-				updatedBod = new struct body;
-				updatedBod->position.x = (insertBod->position.x * insertBod->mass +
-								     myBod->position.x * myBod->mass) /
-									(insertBod->mass + myBod->mass);
-				updatedBod->position.y = (insertBod->position.y * insertBod->mass +
-									 myBod->position.y * myBod->mass) /
-								  	(insertBod->mass + myBod->mass);
-				updatedBod->position.z = (insertBod->position.z * insertBod->mass +
-									 myBod->position.z * myBod->mass) /
-								  	(insertBod->mass + myBod->mass);
+			updatedBod = new struct body;
+			updatedBod->position.x = (insertBod->position.x * insertBod->mass +
+							     myBod->position.x * myBod->mass) /
+								(insertBod->mass + myBod->mass);
+			updatedBod->position.y = (insertBod->position.y * insertBod->mass +
+								 myBod->position.y * myBod->mass) /
+							  	(insertBod->mass + myBod->mass);
+			updatedBod->position.z = (insertBod->position.z * insertBod->mass +
+								 myBod->position.z * myBod->mass) /
+							  	(insertBod->mass + myBod->mass);
 
-				updatedBod->mass = insertBod->mass+myBod->mass;
+			updatedBod->mass = insertBod->mass+myBod->mass;
 
-			//	delete myBod;
-				if (toDelete!=NULL) delete toDelete;
-				toDelete = updatedBod;
-				myBod = updatedBod;
-				updatedBod = insertBod;
-			} 
-			else {
-				updatedBod = myBod;
+		//	delete myBod;
+			if (toDelete!=NULL) delete toDelete;
+			toDelete = updatedBod;
+			myBod = updatedBod;
+			updatedBod = insertBod;
+		} 
+		else {
+			updatedBod = myBod;
+		}
+
+		if (octy->isInU(updatedBod->position)) {
+			if (octy->isInN(updatedBod->position)) {
+				if (octy->isInE(updatedBod->position)) {
+					if (UNE == nullptr) { UNE = new Bhtree(octy->mUNE()); }
+					UNE->insert(updatedBod);
+				}
+				else {
+					if (UNW == nullptr) { UNW = new Bhtree(octy->mUNW()); }
+					UNW->insert(updatedBod);
+				}
+			} else { 	
+				if (octy->isInE(updatedBod->position)) {
+					if (USE == nullptr) { USE = new Bhtree(octy->mUSE()); }
+					USE->insert(updatedBod);
+				}
+				else {
+					if (USW == nullptr) { USW = new Bhtree(octy->mUSW()); }
+					USW->insert(updatedBod);
+				}
 			}
-
-			if (octy->containsUNW(updatedBod->position))
-			{
-				if (UNW == nullptr) { UNW = new Bhtree(octy->mUNW()); }
-				UNW->insert(updatedBod);
-			} 
-			else if(octy->containsUNE(updatedBod->position)) 
-			{
-				if (UNE == nullptr) { UNE = new Bhtree(octy->mUNE()); }
-				UNE->insert(updatedBod);
-			} 
-			else if (octy->containsUSW(updatedBod->position))		
-			{
-				if (USW == nullptr) { USW = new Bhtree(octy->mUSW()); }
-				USW->insert(updatedBod);
-			} 
-			else if (octy->containsUSE(updatedBod->position))				
-			{
-				if (USE == nullptr) { USE = new Bhtree(octy->mUSE()); }							
-				USE->insert(updatedBod);
-			} 
-			else if (octy->containsDNW(updatedBod->position))						
-			{
-				if (DNW == nullptr) { DNW = new Bhtree(octy->mDNW()); }				
-				DNW->insert(updatedBod);
-			} 
-			else if (octy->containsDNE(updatedBod->position))
-			{
-				if (DNE == nullptr) { DNE = new Bhtree(octy->mDNE()); }
-				DNE->insert(updatedBod);
-			} 
-			else if (octy->containsDSW(updatedBod->position))
-			{
-				if (DSW == nullptr) { DSW = new Bhtree(octy->mDSW()); }
-				DSW->insert(updatedBod);
-			} 
-			else 
-			{
-				if (DSE == nullptr) { DSE = new Bhtree(octy->mDSE()); }
-				DSE->insert(updatedBod);
+		}
+		else
+		{
+			if (octy->isInN(updatedBod->position)) {
+				if (octy->isInE(updatedBod->position)) {
+					if (DNE == nullptr) { DNE = new Bhtree(octy->mDNE()); }
+					DNE->insert(updatedBod);
+				}
+				else {
+					if (DNW == nullptr) { DNW = new Bhtree(octy->mDNW()); }
+					DNW->insert(updatedBod);
+				}
+			} else { 	
+				if (octy->isInE(updatedBod->position)) {
+					if (DSE == nullptr) { DSE = new Bhtree(octy->mDSE()); }
+					DSE->insert(updatedBod);
+				}
+				else {
+					if (DSW == nullptr) { DSW = new Bhtree(octy->mDSW()); }
+					DSW->insert(updatedBod);
+				}
 			}
+		}
+		
 
-			if (isExtern) {
-				insert(insertBod);
-			}
+
+		// if (octy->containsUNW(updatedBod->position))
+		// {
+		// 	if (UNW == nullptr) { UNW = new Bhtree(octy->mUNW()); }
+		// 	UNW->insert(updatedBod);
+		// } 
+		// else if(octy->containsUNE(updatedBod->position)) 
+		// {
+		// 	if (UNE == nullptr) { UNE = new Bhtree(octy->mUNE()); }
+		// 	UNE->insert(updatedBod);
+		// } 
+		// else if (octy->containsUSW(updatedBod->position))		
+		// {
+		// 	if (USW == nullptr) { USW = new Bhtree(octy->mUSW()); }
+		// 	USW->insert(updatedBod);
+		// } 
+		// else if (octy->containsUSE(updatedBod->position))				
+		// {
+		// 	if (USE == nullptr) { USE = new Bhtree(octy->mUSE()); }							
+		// 	USE->insert(updatedBod);
+		// } 
+		// else if (octy->containsDNW(updatedBod->position))						
+		// {
+		// 	if (DNW == nullptr) { DNW = new Bhtree(octy->mDNW()); }				
+		// 	DNW->insert(updatedBod);
+		// } 
+		// else if (octy->containsDNE(updatedBod->position))
+		// {
+		// 	if (DNE == nullptr) { DNE = new Bhtree(octy->mDNE()); }
+		// 	DNE->insert(updatedBod);
+		// } 
+		// else if (octy->containsDSW(updatedBod->position))
+		// {
+		// 	if (DSW == nullptr) { DSW = new Bhtree(octy->mDSW()); }
+		// 	DSW->insert(updatedBod);
+		// } 
+		// else 
+		// {
+		// 	if (DSE == nullptr) { DSE = new Bhtree(octy->mDSE()); }
+		// 	DSE->insert(updatedBod);
+		// }
+
+		if (isExtern) {
+			insert(insertBod);
 		}
 	}
 
-	double magnitude(vec3* __restrict__ v)
+	double magnitude(const vec3* __restrict__ v)
 	{
-		return sqrt(v->x*v->x+v->y*v->y+v->z*v->z);
+		return sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
 	}
 
-	double magnitude( double x, double y, double z)
+	double magnitude(const double x, const double y, const double z)
 	{
 		return sqrt(x * x + y * y + z * z);
 	}
 
-	void singleInteract(body* __restrict__ target, body* __restrict__ other, bool singlePart)
+	void singleInteract(body* __restrict__ target, const body* __restrict__ other, const bool singlePart)
 	{
 		vec3 posDiff;
 		posDiff.x = (target->position.x - other->position.x) * TO_METERS;
@@ -195,7 +240,7 @@ public:
 	}
 
 
-	void interactInTree(body* bod) {
+	void interactInTree(body* __restrict__ bod) {
 		if(isExternal()) {
 			if(myBod != bod) {
 				singleInteract(bod, myBod, true);
