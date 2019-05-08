@@ -218,9 +218,9 @@ public:
 		double dist = magnitude(&posDiff);
 		double F = TIME_STEP * (G * target->mass * other->mass) / ((dist * dist + SOFTENING * SOFTENING) * dist);
 
-		target->accel.x -= F * posDiff.x / target->mass;
-		target->accel.y -= F * posDiff.y / target->mass;
-		target->accel.z -= F * posDiff.z / target->mass;
+		target->acceleration.x -= F * posDiff.x / target->mass;
+		target->acceleration.y -= F * posDiff.y / target->mass;
+		target->acceleration.z -= F * posDiff.z / target->mass;
 		
 		//Friction
 	#if ENABLE_FRICTION
@@ -231,9 +231,9 @@ public:
 		//	cout << friction << "\n";
 			if (friction>0.0001 && ENABLE_FRICTION)
 			{
-				target->accel.x += friction*(other->velocity.x-target->velocity.x)/2;
-				target->accel.y += friction*(other->velocity.y-target->velocity.y)/2;
-				target->accel.z += friction*(other->velocity.z-target->velocity.z)/2;
+				target->acceleration.x += friction*(other->velocity.x-target->velocity.x)/2;
+				target->acceleration.y += friction*(other->velocity.y-target->velocity.y)/2;
+				target->acceleration.z += friction*(other->velocity.z-target->velocity.z)/2;
 			}
 		}
 	#endif	
