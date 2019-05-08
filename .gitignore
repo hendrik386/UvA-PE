@@ -177,3 +177,20 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
+*.ppm
+*/.vscode
+Project/Examples/Nbody-Gravity-master/.vscode/
+Project/Examples/Nbody-Gravity-master/run
+Project/Bench/
+Project/NBody/CMakeFiles/
+Project/NBody/Makefile
+Project/NBody/Project
+Project/NBody/cmake_install.cmake
+Project/NBody/.vscode/
+Project/NBody/Build/
+Project/NBody/CMakeCache.txt
+
+
+*.s
+*/Build
+*/CMakeFiles
