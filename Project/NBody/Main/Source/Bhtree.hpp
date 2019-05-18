@@ -6,30 +6,30 @@
 #include "Octant.hpp"
 
 class Bhtree {
-		Body* rootBody;
+		Body* rootBody = nullptr;
 
-		Body* toDelete;
+		Body* toDelete = nullptr;
 
-		Octant* rootOctant;
+		Octant rootOctant;
 
-		Bhtree* upNorthWest;
+		Bhtree* upNorthWest = nullptr;
 
-		Bhtree* upNorthEast;
+		Bhtree* upNorthEast = nullptr;
 
-		Bhtree* upSouthWest;
+		Bhtree* upSouthWest = nullptr;
 
-		Bhtree* upSouthEast;
+		Bhtree* upSouthEast = nullptr;
 
-		Bhtree* downNorthWest;
+		Bhtree* downNorthWest = nullptr;
 
-		Bhtree* downNorthEast;
+		Bhtree* downNorthEast = nullptr;
 
-		Bhtree* downSouthWest;
+		Bhtree* downSouthWest = nullptr;
 
-		Bhtree* downSouthEast;
+		Bhtree* downSouthEast = nullptr;
 
 	public:
-		Bhtree(Octant* __restrict__ rootOctant);
+		Bhtree(const Octant& rootOctant);
 
 		~Bhtree();
 

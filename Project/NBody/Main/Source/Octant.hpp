@@ -33,21 +33,21 @@ class Octant {
 
 		bool isInE(const Vector3D& point);
 
-		Octant* centerUpNorthWest();
+		Octant centerUpNorthWest();
 
-		Octant* centerUpNorthEast();
+		Octant centerUpNorthEast();
 
-		Octant* centerUpSouthWest();
+		Octant centerUpSouthWest();
 
-		Octant* centerUpSouthEast();
+		Octant centerUpSouthEast();
 
-		Octant* centerDownNorthWest();
+		Octant centerDownNorthWest();
 
-		Octant* centerDownNorthEast();
+		Octant centerDownNorthEast();
 
-		Octant* centerDownSouthWest();
+		Octant centerDownSouthWest();
 
-		Octant* centerDownSouthEast();
+		Octant centerDownSouthEast();
 
 		bool containsUpNorthWest(const Vector3D& point);
 

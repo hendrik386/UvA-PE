@@ -80,12 +80,11 @@ void Universe::interactBodies() {
 	Utility::logDebug("Building Octree...");
 
 	// Build tree
-	Vector3D center(0.0, 0.0, 0.1374 /* Does this help? */);
-	Octant* root = new Octant(center, 60 * SYSTEM_SIZE);
+	Octant root = Octant(Vector3D(0.0, 0.0, 0.1374 /* Does this help? */), 60 * SYSTEM_SIZE);
 	Bhtree tree(root);
 
 	for(int bIndex = 1; bIndex < bodies.size(); bIndex++) {
-		if(root->contains(bodies[bIndex].position)) {
+		if(root.contains(bodies[bIndex].position)) {
 			tree.insert(&bodies[bIndex]);
 		}
 	}
@@ -95,7 +94,7 @@ void Universe::interactBodies() {
 	// loop through interactions
 	//#pragma omp parallel for
 	for(int bIndex = 1; bIndex < bodies.size(); bIndex++) {
-		if(root->contains(bodies[bIndex].position)) {
+		if(root.contains(bodies[bIndex].position)) {
 			tree.interact(&bodies[bIndex]);
 		}
 	}

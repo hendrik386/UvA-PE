@@ -47,8 +47,8 @@ bool Octant::isInE(const Vector3D& point) {
 	return point.x <= positive.x && point.x >= negative.x;
 }
 
-Octant* Octant::centerUpNorthWest() {
-	return new Octant(
+Octant Octant::centerUpNorthWest() {
+	return Octant(
 		Vector3D(
 			center.x - lengthDiv4,
 			center.y + lengthDiv4,
@@ -58,12 +58,12 @@ Octant* Octant::centerUpNorthWest() {
 	);
 }
 
-Octant* Octant::centerUpNorthEast() {
-	return new Octant(center + lengthDiv4, lengthDiv2);
+Octant Octant::centerUpNorthEast() {
+	return Octant(center + lengthDiv4, lengthDiv2);
 }
 
-Octant* Octant::centerUpSouthWest() {
-	return new Octant(
+Octant Octant::centerUpSouthWest() {
+	return Octant(
 		Vector3D(
 			center.x - lengthDiv4,
 			center.y - lengthDiv4,
@@ -73,8 +73,8 @@ Octant* Octant::centerUpSouthWest() {
 	);
 }
 
-Octant* Octant::centerUpSouthEast() {
-	return new Octant(
+Octant Octant::centerUpSouthEast() {
+	return Octant(
 		Vector3D(
 			center.x + lengthDiv4,
 			center.y - lengthDiv4,
@@ -84,8 +84,8 @@ Octant* Octant::centerUpSouthEast() {
 	);
 }
 
-Octant* Octant::centerDownNorthWest() {
-	return new Octant(
+Octant Octant::centerDownNorthWest() {
+	return Octant(
 		Vector3D(
 			center.x - lengthDiv4,
 			center.y + lengthDiv4,
@@ -95,8 +95,8 @@ Octant* Octant::centerDownNorthWest() {
 	);
 }
 
-Octant* Octant::centerDownNorthEast() {
-	return new Octant(
+Octant Octant::centerDownNorthEast() {
+	return Octant(
 		Vector3D(
 			center.x + lengthDiv4,
 			center.y + lengthDiv4,
@@ -106,12 +106,12 @@ Octant* Octant::centerDownNorthEast() {
 	);
 }
 
-Octant* Octant::centerDownSouthWest() {
-	return new Octant(center - lengthDiv4, lengthDiv2);
+Octant Octant::centerDownSouthWest() {
+	return Octant(center - lengthDiv4, lengthDiv2);
 }
 
-Octant* Octant::centerDownSouthEast() {
-	return new Octant(
+Octant Octant::centerDownSouthEast() {
+	return Octant(
 		Vector3D(
 			center.x + lengthDiv4,
 			center.y - lengthDiv4,

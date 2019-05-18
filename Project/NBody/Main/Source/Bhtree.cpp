@@ -1,17 +1,6 @@
 #include "Bhtree.hpp"
 
-Bhtree::Bhtree(Octant* rootOctant) {
-	rootBody = nullptr;
-	toDelete = nullptr;
-	this->rootOctant = rootOctant;
-	upNorthWest = nullptr;
-	upNorthEast = nullptr;
-	upSouthWest = nullptr;
-	upSouthEast = nullptr;
-	downNorthWest = nullptr;
-	downNorthEast = nullptr;
-	downSouthWest = nullptr;
-	downSouthEast = nullptr;
+Bhtree::Bhtree(const Octant& rootOctant) : rootOctant(rootOctant) {
 }
 
 Bhtree::~Bhtree() {
@@ -52,7 +41,6 @@ Bhtree::~Bhtree() {
 		delete toDelete;
 	}
 
-	delete rootOctant; //rootOctant->~Octant();
 	//	if (!isExternal() && rootBody!= NULL && rootBody->velocity.x==0.0) delete rootBody;
 	//	delete rootBody;
 }
@@ -96,98 +84,98 @@ void Bhtree::insert(Body* body) {
 		updatedBody = rootBody;
 	}
 
-	if(rootOctant->isInU(updatedBody->position)) {
-		if(rootOctant->isInN(updatedBody->position)) {
-			if(rootOctant->isInE(updatedBody->position)) {
+	if(rootOctant.isInU(updatedBody->position)) {
+		if(rootOctant.isInN(updatedBody->position)) {
+			if(rootOctant.isInE(updatedBody->position)) {
 				if(upNorthEast == nullptr) {
-					upNorthEast = new Bhtree(rootOctant->centerUpNorthEast());
+					upNorthEast = new Bhtree(rootOctant.centerUpNorthEast());
 				}
 				upNorthEast->insert(updatedBody);
 			} else {
 				if(upNorthWest == nullptr) {
-					upNorthWest = new Bhtree(rootOctant->centerUpNorthWest());
+					upNorthWest = new Bhtree(rootOctant.centerUpNorthWest());
 				}
 				upNorthWest->insert(updatedBody);
 			}
 		} else {
-			if(rootOctant->isInE(updatedBody->position)) {
+			if(rootOctant.isInE(updatedBody->position)) {
 				if(upSouthEast == nullptr) {
-					upSouthEast = new Bhtree(rootOctant->centerUpSouthEast());
+					upSouthEast = new Bhtree(rootOctant.centerUpSouthEast());
 				}
 				upSouthEast->insert(updatedBody);
 			} else {
 				if(upSouthWest == nullptr) {
-					upSouthWest = new Bhtree(rootOctant->centerUpSouthWest());
+					upSouthWest = new Bhtree(rootOctant.centerUpSouthWest());
 				}
 				upSouthWest->insert(updatedBody);
 			}
 		}
 	} else {
-		if(rootOctant->isInN(updatedBody->position)) {
-			if(rootOctant->isInE(updatedBody->position)) {
+		if(rootOctant.isInN(updatedBody->position)) {
+			if(rootOctant.isInE(updatedBody->position)) {
 				if(downNorthEast == nullptr) {
-					downNorthEast = new Bhtree(rootOctant->centerDownNorthEast());
+					downNorthEast = new Bhtree(rootOctant.centerDownNorthEast());
 				}
 				downNorthEast->insert(updatedBody);
 			} else {
 				if(downNorthWest == nullptr) {
-					downNorthWest = new Bhtree(rootOctant->centerDownNorthWest());
+					downNorthWest = new Bhtree(rootOctant.centerDownNorthWest());
 				}
 				downNorthWest->insert(updatedBody);
 			}
 		} else {
-			if(rootOctant->isInE(updatedBody->position)) {
+			if(rootOctant.isInE(updatedBody->position)) {
 				if(downSouthEast == nullptr) {
-					downSouthEast = new Bhtree(rootOctant->centerDownSouthEast());
+					downSouthEast = new Bhtree(rootOctant.centerDownSouthEast());
 				}
 				downSouthEast->insert(updatedBody);
 			} else {
 				if(downSouthWest == nullptr) {
-					downSouthWest = new Bhtree(rootOctant->centerDownSouthWest());
+					downSouthWest = new Bhtree(rootOctant.centerDownSouthWest());
 				}
 				downSouthWest->insert(updatedBody);
 			}
 		}
 	}
 
-	// if (rootOctant->containsUpNorthWest(updatedBody->position))
+	// if (rootOctant.containsUpNorthWest(updatedBody->position))
 	// {
-	// 	if (upNorthWest == nullptr) { upNorthWest = new Bhtree(rootOctant->centerUpNorthWest()); }
+	// 	if (upNorthWest == nullptr) { upNorthWest = new Bhtree(rootOctant.centerUpNorthWest()); }
 	// 	upNorthWest->insert(updatedBody);
 	// }
-	// else if(rootOctant->containsUpNorthEast(updatedBody->position))
+	// else if(rootOctant.containsUpNorthEast(updatedBody->position))
 	// {
-	// 	if (upNorthEast == nullptr) { upNorthEast = new Bhtree(rootOctant->centerUpNorthEast()); }
+	// 	if (upNorthEast == nullptr) { upNorthEast = new Bhtree(rootOctant.centerUpNorthEast()); }
 	// 	upNorthEast->insert(updatedBody);
 	// }
-	// else if (rootOctant->containsUpSouthWest(updatedBody->position))
+	// else if (rootOctant.containsUpSouthWest(updatedBody->position))
 	// {
-	// 	if (upSouthWest == nullptr) { upSouthWest = new Bhtree(rootOctant->centerUpSouthWest()); }
+	// 	if (upSouthWest == nullptr) { upSouthWest = new Bhtree(rootOctant.centerUpSouthWest()); }
 	// 	upSouthWest->insert(updatedBody);
 	// }
-	// else if (rootOctant->containsUpSouthEast(updatedBody->position))
+	// else if (rootOctant.containsUpSouthEast(updatedBody->position))
 	// {
-	// 	if (upSouthEast == nullptr) { upSouthEast = new Bhtree(rootOctant->centerUpSouthEast()); }
+	// 	if (upSouthEast == nullptr) { upSouthEast = new Bhtree(rootOctant.centerUpSouthEast()); }
 	// 	upSouthEast->insert(updatedBody);
 	// }
-	// else if (rootOctant->containsDownNorthWest(updatedBody->position))
+	// else if (rootOctant.containsDownNorthWest(updatedBody->position))
 	// {
-	// 	if (downNorthWest == nullptr) { downNorthWest = new Bhtree(rootOctant->centerDownNorthWest()); }
+	// 	if (downNorthWest == nullptr) { downNorthWest = new Bhtree(rootOctant.centerDownNorthWest()); }
 	// 	downNorthWest->insert(updatedBody);
 	// }
-	// else if (rootOctant->containsDownNorthEast(updatedBody->position))
+	// else if (rootOctant.containsDownNorthEast(updatedBody->position))
 	// {
-	// 	if (downNorthEast == nullptr) { downNorthEast = new Bhtree(rootOctant->centerDownNorthEast()); }
+	// 	if (downNorthEast == nullptr) { downNorthEast = new Bhtree(rootOctant.centerDownNorthEast()); }
 	// 	downNorthEast->insert(updatedBody);
 	// }
-	// else if (rootOctant->containsDownSouthWest(updatedBody->position))
+	// else if (rootOctant.containsDownSouthWest(updatedBody->position))
 	// {
-	// 	if (downSouthWest == nullptr) { downSouthWest = new Bhtree(rootOctant->centerDownSouthWest()); }
+	// 	if (downSouthWest == nullptr) { downSouthWest = new Bhtree(rootOctant.centerDownSouthWest()); }
 	// 	downSouthWest->insert(updatedBody);
 	// }
 	// else
 	// {
-	// 	if (downSouthEast == nullptr) { downSouthEast = new Bhtree(rootOctant->centerDownSouthEast()); }
+	// 	if (downSouthEast == nullptr) { downSouthEast = new Bhtree(rootOctant.centerDownSouthEast()); }
 	// 	downSouthEast->insert(updatedBody);
 	// }
 
@@ -201,7 +189,7 @@ void Bhtree::interact(Body* body) {
 		if(rootBody != body) {
 			Body::singleInteraction(*body, *rootBody, true, true, false, true, false);
 		}
-	} else if(rootOctant->getLength() / Vector3D(rootBody->position.x - body->position.x, rootBody->position.y - body->position.y, rootBody->position.z - body->position.z).magnitude() < MAX_DISTANCE) {
+	} else if(rootOctant.getLength() / Vector3D(rootBody->position.x - body->position.x, rootBody->position.y - body->position.y, rootBody->position.z - body->position.z).magnitude() < MAX_DISTANCE) {
 		Body::singleInteraction(*body, *rootBody, false, true, false, true, false);
 	} else {
 		if(upNorthWest != nullptr) {
