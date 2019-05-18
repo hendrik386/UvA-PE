@@ -16,8 +16,8 @@ bool Bhtree::isExternal() const {
 
 void Bhtree::insert(Body& body) {
 	if(rootBody == nullptr) {
-		rootBody = &body;
 		deleteRootBody = false;
+		rootBody = &body;
 
 		return;
 	}
@@ -29,12 +29,18 @@ void Bhtree::insert(Body& body) {
 		: body;
 
 	if(!isTreeExternal) {
-		rootBody = new Body(
+		Body* newRootBody = new Body(
 			(body.position * body.mass + rootBody->position * rootBody->mass) / (body.mass + rootBody->mass),
 			Vector3D { 0.0, 0.0, 0.0 },
 			Vector3D { 0.0, 0.0, 0.0 },
 			body.mass + rootBody->mass
 		);
+
+		if(deleteRootBody) {
+			delete rootBody;
+		}
+
+		rootBody = newRootBody;
 		deleteRootBody = true;
 	}
 

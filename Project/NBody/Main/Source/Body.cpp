@@ -30,6 +30,7 @@ void Body::singleInteraction(Body& left, Body& right, const bool& singleTreePart
 				if(updateLeftFriction) {
 					left.acceleration += friction * (right.velocity - left.velocity) / 2;
 				}
+
 				if(updateRightFriction) {
 					right.acceleration -= friction * (left.velocity - right.velocity) / 2; // NOTE: Not sure if this is correct, but it is unused so not important for now
 				}

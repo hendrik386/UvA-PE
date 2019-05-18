@@ -29,7 +29,7 @@ class Universe {
 		 */
 		Universe(const int& bodyCount, const int& imageWidth, const int& imageHeight);
 
-		Universe(std::vector<Body>  bodies, const int& imageWidth, const int& imageHeight);
+		Universe(std::vector<Body> bodies, const int& imageWidth, const int& imageHeight);
 
 		void simulate();
 

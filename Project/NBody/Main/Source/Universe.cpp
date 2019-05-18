@@ -183,6 +183,7 @@ void Universe::simulate() {
 		interactBodies();
 
 		if((step % RENDER_INTERVAL == 0 && CREATE_IMAGE) || step == STEP_COUNT - 1) {
+			#pragma omp task firstprivate(step, bodies)
 			image.createFrame(step + 1, bodies);
 		}
 
