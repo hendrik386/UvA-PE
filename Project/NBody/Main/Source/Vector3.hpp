@@ -28,9 +28,13 @@ class Vector3D {
 
 		friend Vector3D operator +(const Vector3D& left, const double& right);
 
+		friend Vector3D operator +(const double& left, const Vector3D& right);
+
 		friend Vector3D operator -(const Vector3D& left, const Vector3D& right);
 
 		friend Vector3D operator -(const Vector3D& left, const double& right);
+
+		friend Vector3D operator -(const double& left, const Vector3D& right);
 
 		friend Vector3D operator *(const Vector3D& left, const double& right);
 

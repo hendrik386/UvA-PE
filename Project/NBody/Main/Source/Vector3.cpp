@@ -65,12 +65,20 @@ Vector3D operator +(const Vector3D& left, const double& right) {
 	return Vector3D(left) += right;
 }
 
+Vector3D operator +(const double& left, const Vector3D& right) {
+	return right + left;
+}
+
 Vector3D operator -(const Vector3D& left, const Vector3D& right) {
 	return Vector3D(left) -= right;
 }
 
 Vector3D operator -(const Vector3D& left, const double& right) {
 	return Vector3D(left) -= right;
+}
+
+Vector3D operator -(const double& left, const Vector3D& right) {
+	return right - left;
 }
 
 Vector3D operator *(const Vector3D& left, const double& right) {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "stdio.h"
+#include <memory>
 
 #include "Body.hpp"
 #include "Octant.hpp"
@@ -8,25 +8,25 @@
 class Bhtree {
 		Body* rootBody = nullptr;
 
-		Body* toDelete = nullptr;
+		bool deleteRootBody = false;
 
 		Octant rootOctant;
 
-		Bhtree* upNorthWest = nullptr;
+		std::unique_ptr<Bhtree> upNorthWest = nullptr;
 
-		Bhtree* upNorthEast = nullptr;
+		std::unique_ptr<Bhtree> upNorthEast = nullptr;
 
-		Bhtree* upSouthWest = nullptr;
+		std::unique_ptr<Bhtree> upSouthWest = nullptr;
 
-		Bhtree* upSouthEast = nullptr;
+		std::unique_ptr<Bhtree> upSouthEast = nullptr;
 
-		Bhtree* downNorthWest = nullptr;
+		std::unique_ptr<Bhtree> downNorthWest = nullptr;
 
-		Bhtree* downNorthEast = nullptr;
+		std::unique_ptr<Bhtree> downNorthEast = nullptr;
 
-		Bhtree* downSouthWest = nullptr;
+		std::unique_ptr<Bhtree> downSouthWest = nullptr;
 
-		Bhtree* downSouthEast = nullptr;
+		std::unique_ptr<Bhtree> downSouthEast = nullptr;
 
 	public:
 		Bhtree(const Octant& rootOctant);
@@ -35,7 +35,7 @@ class Bhtree {
 
 		bool isExternal() const;
 
-		void insert(Body* __restrict__ body);
+		void insert(Body& body);
 
 		void interact(Body* __restrict__ body);
 };

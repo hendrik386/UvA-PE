@@ -85,7 +85,7 @@ void Universe::interactBodies() {
 
 	for(int bIndex = 1; bIndex < bodies.size(); bIndex++) {
 		if(root.contains(bodies[bIndex].position)) {
-			tree.insert(&bodies[bIndex]);
+			tree.insert(bodies[bIndex]);
 		}
 	}
 
