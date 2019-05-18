@@ -1,23 +1,6 @@
 #pragma once
 
-/*
- * Constants.h
- *
- *  Created on: Feb 3, 2016
- *      Author: peterwhidden
- */
-
-const double PI = 3.14159265358979323846;
-
-/**
- * Meters in an AU.
- */
-const double TO_METERS = 1.496e11;
-
-/**
- * Farthest particles in AU.
- */
-const double SYSTEM_SIZE = 3.5;
+#include "Utility.hpp"
 
 /**
  * Closest particles to center in AU.
@@ -25,9 +8,9 @@ const double SYSTEM_SIZE = 3.5;
 const double INNER_BOUND = 0.3;
 
 /**
- * Softens particles interactions at close distances.
+ * Softens particles interactions at close distances. Distance expressed in meters.
  */
-const double SOFTENING = 0.015 * TO_METERS;
+const double SOFTENING = Utility::astronomicalUnitsToMeters(0.015);
 
 const double SOLAR_MASS = 2.0e30; // In kg
 
@@ -88,24 +71,9 @@ const int TIME_STEP = 3 * 32 * 1024; // (1*128*1024)
 const int DOT_SIZE = 8; // 15
 
 /**
- * Will automatically stop running after this many steps.
- */
-const int STEP_COUNT = 50;
-
-/**
- * How many timesteps to simulate in between each frame rendered.
- */
-const int RENDER_INTERVAL = 1;
-
-/**
  * Print lots of info to the console.
  */
 const bool DEBUG_INFO = false;
-
-/**
- * Whether to create images.
- */
-const bool CREATE_IMAGE = true;
 
 /**
  * Thickness in AU

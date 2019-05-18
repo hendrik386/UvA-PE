@@ -6,7 +6,7 @@
 #include "Utility.hpp"
 
 void Body::singleInteraction(Body& left, Body& right, const bool& singleTreePart, const bool& updateLeftAcceleration, const bool& updateRightAcceleration, const bool& updateLeftFriction, const bool& updateRightFriction) {
-	Vector3D positionDifference = (left.position - right.position) * TO_METERS;
+	Vector3D positionDifference = Utility::astronomicalUnitsToMeters(left.position - right.position);
 
 	double distance = positionDifference.magnitude();
 	double F = TIME_STEP * (G * left.mass * right.mass) / ((distance * distance + SOFTENING * SOFTENING) * distance);
@@ -22,7 +22,7 @@ void Body::singleInteraction(Body& left, Body& right, const bool& singleTreePart
 	// Friction
 	if constexpr (ENABLE_FRICTION) {
 		if(singleTreePart) {
-			double friction = 0.5 / pow(2.0, FRICTION_FACTOR * (((distance + SOFTENING)) / (TO_METERS)));
+			double friction = 0.5 / pow(2.0, FRICTION_FACTOR * (Utility::metersToAstronomicalUnits(distance + SOFTENING)));
 
 			Utility::logInfo(std::to_string(friction) + "\n");
 
@@ -56,5 +56,5 @@ void Body::update() {
 	acceleration.z = 0.0;
 
 	// Update position
-	position += TIME_STEP * velocity / TO_METERS;
+	position += Utility::metersToAstronomicalUnits(TIME_STEP * velocity);
 }

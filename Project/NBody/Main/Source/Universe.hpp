@@ -8,7 +8,7 @@
 #include "Image.hpp"
 
 class Universe {
-		Image image;
+		const double systemSize;
 
 		std::vector<Body> initializeBodies(const int& bodyCount);
 
@@ -17,21 +17,28 @@ class Universe {
 		void updateBodies();
 
 	public:
-		static Universe loadFromCsvFile(const std::filesystem::path& filePath, const int& imageWidth, const int& imageHeight);
+		static Universe loadFromCsvFile(const std::filesystem::path& filePath, const double& systemSize);
 
 		std::vector<Body> bodies;
 
 		/**
 		 * Creates a new universe.
-		 * @param bodyCount Number of small particles.
+		 * @param bodies The bodies to place in the universe.
+		 * @param systemSize Farthest particles in AU.
+		 */
+		Universe(std::vector<Body> bodies, const double& systemSize);
+
+		Universe(const int& bodyCount, const double& systemSize);
+
+		/**
+		 * Performs universe simulation.
+		 * @param steps Will automatically stop running after this many steps.
+		 * @param renderInterval How many timesteps to simulate in between each frame rendered.
+		 * @param createImages Whether to create images during the simulation.
 		 * @param imageWidth The width of the rendered image.
 		 * @param imageHeight The height of the rendered image.
 		 */
-		Universe(const int& bodyCount, const int& imageWidth, const int& imageHeight);
-
-		Universe(std::vector<Body> bodies, const int& imageWidth, const int& imageHeight);
-
-		void simulate();
+		void simulate(const int& steps, const int& renderInterval, const bool& createImages, const int& imageWidth = 0, const int& imageHeight = 0);
 
 		void writeToCsvFile(const std::filesystem::path& filePath);
 };

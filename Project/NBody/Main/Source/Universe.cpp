@@ -13,14 +13,13 @@
 std::vector<Body> Universe::initializeBodies(const int& bodyCount) {
 	std::vector<Body> bodies;
 
-	using std::uniform_real_distribution;
-	uniform_real_distribution<double> randAngle(0.0, 200.0 * PI);
-	uniform_real_distribution<double> randRadius(INNER_BOUND, SYSTEM_SIZE);
-	uniform_real_distribution<double> randHeight(0.0, SYSTEM_THICKNESS);
+	std::uniform_real_distribution<double> randAngle(0.0, 200.0 * Utility::pi);
+	std::uniform_real_distribution<double> randRadius(INNER_BOUND, systemSize);
+	std::uniform_real_distribution<double> randHeight(0.0, SYSTEM_THICKNESS);
 	std::default_random_engine gen(0);
 
 	//STARS
-	const double starVelocity = 0.67 * sqrt((G * SOLAR_MASS) / (4 * BINARY_SEPARATION * TO_METERS));
+	const double starVelocity = 0.67 * sqrt((G * SOLAR_MASS) / Utility::astronomicalUnitsToMeters(4 * BINARY_SEPARATION));
 
 	//STAR 1
 	bodies.emplace_back(
@@ -44,11 +43,8 @@ std::vector<Body> Universe::initializeBodies(const int& bodyCount) {
 	for(int index = bodies.size(); index < bodyCount; index++) {
 		// Calculate body properties
 		const double angle = randAngle(gen);
-		const double radius = sqrt(SYSTEM_SIZE) * sqrt(randRadius(gen));
-		const double velocity = pow(
-			((G * (SOLAR_MASS + ((radius - INNER_BOUND) / SYSTEM_SIZE) * EXTRA_MASS * SOLAR_MASS))
-				/ (radius * TO_METERS)), 0.5
-		);
+		const double radius = sqrt(systemSize) * sqrt(randRadius(gen));
+		const double velocity = pow(((G * (SOLAR_MASS + ((radius - INNER_BOUND) / systemSize) * EXTRA_MASS * SOLAR_MASS)) / Utility::astronomicalUnitsToMeters(radius)), 0.5);
 
 		// Create the body
 		bodies.emplace_back(
@@ -82,7 +78,7 @@ void Universe::interactBodies() {
 	Utility::logDebug("Building Octree...");
 
 	// Build tree
-	Octant root = Octant(Vector3D(0.0, 0.0, 0.1374 /* Does this help? */), 60 * SYSTEM_SIZE);
+	Octant root = Octant(Vector3D(0.0, 0.0, 0.1374 /* Does this help? */), 60 * systemSize);
 	Bhtree tree(root);
 
 	for(int index = 1; index < bodies.size(); index++) {
@@ -137,7 +133,7 @@ void Universe::updateBodies() {
 	Utility::logDebug("Ratio: " + std::to_string(massBelow / massAbove));
 }
 
-Universe Universe::loadFromCsvFile(const std::filesystem::path& filePath, const int& imageWidth, const int& imageHeight) {
+Universe Universe::loadFromCsvFile(const std::filesystem::path& filePath, const double& systemSize) {
 	std::vector<Body> bodies;
 
 	// Read CSV file
@@ -162,29 +158,30 @@ Universe Universe::loadFromCsvFile(const std::filesystem::path& filePath, const 
 		);
 	}
 
-	return Universe(bodies, imageWidth, imageHeight);
+	return Universe(bodies, systemSize);
 }
 
-Universe::Universe(const int& bodyCount, const int& imageWidth, const int& imageHeight) : Universe(initializeBodies(bodyCount), imageWidth, imageHeight) {
-}
-
-Universe::Universe(std::vector<Body> bodies, const int& imageWidth, const int& imageHeight) : bodies(std::move(bodies)), image(imageWidth, imageHeight) {
+Universe::Universe(std::vector<Body> bodies, const double& systemSize) : bodies(std::move(bodies)), systemSize(systemSize) {
 	Utility::logInfo(std::to_string(SYSTEM_THICKNESS) + "AU thick disk\n");
 }
 
-void Universe::simulate() {
-	if(CREATE_IMAGE) {
-		image.createFrame(1, bodies);
+Universe::Universe(const int& bodyCount, const double& systemSize) : systemSize(systemSize), bodies(initializeBodies(bodyCount)) {
+}
+
+void Universe::simulate(const int& steps, const int& renderInterval, const bool& createImages, const int& imageWidth, const int& imageHeight) {
+	Image image(imageWidth, imageHeight);
+
+	if(createImages) {
+		image.createFrame(1, renderInterval, bodies, systemSize);
 	}
 
-	for(int step = 1; step < STEP_COUNT; step++) {
+	for(int step = 1; step < steps; step++) {
 		Utility::logInfo("Beginning timestep: " + std::to_string(step));
 
 		interactBodies();
 
-		if((step % RENDER_INTERVAL == 0 && CREATE_IMAGE) || step == STEP_COUNT - 1) {
-			#pragma omp task firstprivate(step, bodies)
-			image.createFrame(step + 1, bodies);
+		if((step % renderInterval == 0 && createImages) || step == steps - 1) {
+			image.createFrame(step + 1, renderInterval, bodies, systemSize);
 		}
 
 		Utility::logDebug("-------Done------- timestep: " + std::to_string(step) + "\n");

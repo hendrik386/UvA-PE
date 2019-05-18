@@ -6,6 +6,9 @@ class Body {
 	public:
 		static void singleInteraction(Body& left, Body& right, const bool& singleTreePart, const bool& updateLeftAcceleration, const bool& updateRightAcceleration, const bool& updateLeftFriction, const bool& updateRightFriction);
 
+		/**
+		 * Position, expressed in AU.
+		 */
 		Vector3D position;
 
 		Vector3D velocity;
