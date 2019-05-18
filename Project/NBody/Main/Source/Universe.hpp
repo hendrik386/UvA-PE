@@ -8,6 +8,8 @@
 #include "Image.hpp"
 
 class Universe {
+		Image image;
+
 		std::vector<Body> initializeBodies(const int& bodyCount);
 
 		void interactBodies();
@@ -16,8 +18,6 @@ class Universe {
 
 	public:
 		static Universe loadFromCsvFile(const std::filesystem::path& filePath, const int& imageWidth, const int& imageHeight);
-
-		Image image;
 
 		std::vector<Body> bodies;
 

@@ -38,9 +38,12 @@ void Bhtree::insert(Body& body) {
 		deleteRootBody = true;
 	}
 
+	bool updatedBodyIsInN = rootOctant.isInN(updatedBody.position);
+	bool updatedBodyIsInE = rootOctant.isInE(updatedBody.position);
+
 	if(rootOctant.isInU(updatedBody.position)) {
-		if(rootOctant.isInN(updatedBody.position)) {
-			if(rootOctant.isInE(updatedBody.position)) {
+		if(updatedBodyIsInN) {
+			if(updatedBodyIsInE) {
 				if(upNorthEast == nullptr) {
 					upNorthEast = std::make_unique<Bhtree>(rootOctant.centerUpNorthEast());
 				}
@@ -65,8 +68,8 @@ void Bhtree::insert(Body& body) {
 			}
 		}
 	} else {
-		if(rootOctant.isInN(updatedBody.position)) {
-			if(rootOctant.isInE(updatedBody.position)) {
+		if(updatedBodyIsInN) {
+			if(updatedBodyIsInE) {
 				if(downNorthEast == nullptr) {
 					downNorthEast = std::make_unique<Bhtree>(rootOctant.centerDownNorthEast());
 				}

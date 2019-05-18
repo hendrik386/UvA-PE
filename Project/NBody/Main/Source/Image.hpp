@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 class Body;
@@ -7,6 +8,8 @@ class Body;
 class Color;
 
 class Image {
+		std::unique_ptr<double[]> image;
+
 		unsigned char colorDepth(const unsigned char& value, const unsigned char& pixel, const double& factor);
 
 		double toPixelSpace(const double& point, const int& size);
@@ -22,13 +25,7 @@ class Image {
 		 */
 		const int height;
 
-		char* image;
-
-		double* hdImage;
-
 		Image(const int& width, const int& height);
-
-		~Image();
 
 		void clear();
 

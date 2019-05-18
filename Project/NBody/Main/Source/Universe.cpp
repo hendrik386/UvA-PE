@@ -5,6 +5,7 @@
 #include <fstream>
 #include <random>
 #include <csv.h>
+#include <omp.h>
 
 #include "Bhtree.hpp"
 #include "Utility.hpp"
@@ -73,6 +74,7 @@ void Universe::interactBodies() {
 	Utility::logDebug("Calculating Force from star...");
 
 	Body& sun = bodies[0];
+
 	for(int index = 1; index < bodies.size(); index++) {
 		Body::singleInteraction(sun, bodies[index], false, true, true, false, false);
 	}
@@ -83,19 +85,23 @@ void Universe::interactBodies() {
 	Octant root = Octant(Vector3D(0.0, 0.0, 0.1374 /* Does this help? */), 60 * SYSTEM_SIZE);
 	Bhtree tree(root);
 
-	for(int bIndex = 1; bIndex < bodies.size(); bIndex++) {
-		if(root.contains(bodies[bIndex].position)) {
-			tree.insert(bodies[bIndex]);
+	for(int index = 1; index < bodies.size(); index++) {
+		Body& body = bodies[index];
+
+		if(root.contains(body.position)) {
+			tree.insert(body);
 		}
 	}
 
 	Utility::logDebug("Calculating particle interactions...");
 
-	// loop through interactions
-	//#pragma omp parallel for
-	for(int bIndex = 1; bIndex < bodies.size(); bIndex++) {
-		if(root.contains(bodies[bIndex].position)) {
-			tree.interact(&bodies[bIndex]);
+	// Loop through interactions
+	#pragma omp parallel for
+	for(int index = 1; index < bodies.size(); index++) {
+		Body& body = bodies[index];
+
+		if(root.contains(body.position)) {
+			tree.interact(&body);
 		}
 	}
 
@@ -108,9 +114,12 @@ void Universe::updateBodies() {
 	double massAbove = 0.0;
 	double massBelow = 0.0;
 
-	for(auto& body : bodies) {
+	#pragma omp parallel for
+	for(int index = 0; index < bodies.size(); ++index) {
+		Body& body = bodies[index];
+
 		if constexpr (DEBUG_INFO) {
-			if(&body == &bodies[0]) {
+			if(index == 0) {
 				Utility::logDebug("Star x acceleration: " + std::to_string(body.acceleration.x));
 				Utility::logDebug("Star y acceleration: " + std::to_string(body.acceleration.y));
 			} else if(body.position.y > 0.0) {
