@@ -82,11 +82,11 @@ void Universe::interactBodies() {
 	// Build tree
 	Vector3D center(0.0, 0.0, 0.1374 /* Does this help? */);
 	Octant* root = new Octant(center, 60 * SYSTEM_SIZE);
-	Bhtree* tree = new Bhtree(root);
+	Bhtree tree(root);
 
 	for(int bIndex = 1; bIndex < bodies.size(); bIndex++) {
 		if(root->contains(bodies[bIndex].position)) {
-			tree->insert(&bodies[bIndex]);
+			tree.insert(&bodies[bIndex]);
 		}
 	}
 
@@ -96,12 +96,9 @@ void Universe::interactBodies() {
 	//#pragma omp parallel for
 	for(int bIndex = 1; bIndex < bodies.size(); bIndex++) {
 		if(root->contains(bodies[bIndex].position)) {
-			tree->interact(&bodies[bIndex]);
+			tree.interact(&bodies[bIndex]);
 		}
 	}
-
-	// Destroy tree
-	delete tree;
 
 	Utility::logDebug("Updating particle positions...");
 
@@ -109,27 +106,27 @@ void Universe::interactBodies() {
 }
 
 void Universe::updateBodies() {
-	double mAbove = 0.0;
-	double mBelow = 0.0;
+	double massAbove = 0.0;
+	double massBelow = 0.0;
 
-	for(auto& current : bodies) {
-		//if constexpr (DEBUG_INFO) {
-		if(&current == &bodies[0]) {
-			Utility::logDebug("Star x acceleration: " + std::to_string(current.acceleration.x));
-			Utility::logDebug("Star y acceleration: " + std::to_string(current.acceleration.y));
-		} else if(current.position.y > 0.0) {
-			mAbove += current.mass;
-		} else {
-			mBelow += current.mass;
+	for(auto& body : bodies) {
+		if constexpr (DEBUG_INFO) {
+			if(&body == &bodies[0]) {
+				Utility::logDebug("Star x acceleration: " + std::to_string(body.acceleration.x));
+				Utility::logDebug("Star y acceleration: " + std::to_string(body.acceleration.y));
+			} else if(body.position.y > 0.0) {
+				massAbove += body.mass;
+			} else {
+				massBelow += body.mass;
+			}
 		}
-		//}
 
-		current.update();
+		body.update();
 	}
 
-	Utility::logDebug("Mass Below: " + std::to_string(mBelow));
-	Utility::logDebug("Mass Above: " + std::to_string(mAbove));
-	Utility::logDebug("Ratio: " + std::to_string(mBelow / mAbove));
+	Utility::logDebug("Mass Below: " + std::to_string(massBelow));
+	Utility::logDebug("Mass Above: " + std::to_string(massAbove));
+	Utility::logDebug("Ratio: " + std::to_string(massBelow / massAbove));
 }
 
 Universe Universe::loadFromCsvFile(const std::filesystem::path& filePath, const int& imageWidth, const int& imageHeight) {
