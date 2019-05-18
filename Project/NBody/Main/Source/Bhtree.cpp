@@ -155,7 +155,7 @@ void Bhtree::interact(Body* body) {
 		if(rootBody != body) {
 			Body::singleInteraction(*body, *rootBody, true, true, false, true, false);
 		}
-	} else if(rootOctant.getLength() / (rootBody->position - body->position).magnitude() < MAX_DISTANCE) {
+	} else if(rootOctant.getLength() / rootBody->magnitude(*body) < MAX_DISTANCE) {
 		Body::singleInteraction(*body, *rootBody, false, true, false, true, false);
 	} else {
 		if(upNorthWest != nullptr) {

@@ -43,7 +43,7 @@ Body::Body(const Vector3D& position, const Vector3D& velocity, const Vector3D& a
 }
 
 double Body::magnitude(const Body& other) const {
-	return Vector3D(position.x - other.position.x, position.y - other.position.y, position.z - other.position.z).magnitude();
+	return (position - other.position).magnitude();
 }
 
 void Body::update() {
