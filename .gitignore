@@ -194,3 +194,5 @@ Project/NBody/CMakeCache.txt
 *.s
 */Build
 */CMakeFiles
+## Custom settings
+!Project/NBody/Test/Resources/images/*
