@@ -12,64 +12,56 @@ class Octant {
 
 		double lengthDiv4;
 
-		double plusBound[3];
+		Vector3D positiveBound;
 
-		double minBound[3];
+		Vector3D negativeBound;
 
-		double plusZ;
+		Vector3D positive;
 
-		double minZ;
-
-		double plusY;
-
-		double minY;
-
-		double plusX;
-
-		double minX;
+		Vector3D negative;
 
 	public:
-		Octant(const Vector3D& m, const double l);
+		Octant(const Vector3D& center, const double& length);
 
 		double getLength();
 
-		bool contains(const Vector3D& p);
+		bool contains(const Vector3D& point);
 
-		bool isInU(const Vector3D& p);
+		bool isInU(const Vector3D& point);
 
-		bool isInN(const Vector3D& p);
+		bool isInN(const Vector3D& point);
 
-		bool isInE(const Vector3D& p);
+		bool isInE(const Vector3D& point);
 
-		bool containsUNW(const Vector3D& p);
+		Octant* centerUpNorthWest();
 
-		Octant* mUNW();
+		Octant* centerUpNorthEast();
 
-		bool containsUNE(const Vector3D& p);
+		Octant* centerUpSouthWest();
 
-		Octant* mUNE();
+		Octant* centerUpSouthEast();
 
-		bool containsUSW(const Vector3D& p);
+		Octant* centerDownNorthWest();
 
-		Octant* mUSW();
+		Octant* centerDownNorthEast();
 
-		bool containsUSE(const Vector3D& p);
+		Octant* centerDownSouthWest();
 
-		Octant* mUSE();
+		Octant* centerDownSouthEast();
 
-		bool containsDNW(const Vector3D& p);
+		bool containsUpNorthWest(const Vector3D& point);
 
-		Octant* mDNW();
+		bool containsUpNorthEast(const Vector3D& point);
 
-		bool containsDNE(const Vector3D& p);
+		bool containsUpSouthWest(const Vector3D& point);
 
-		Octant* mDNE();
+		bool containsUpSouthEast(const Vector3D& point);
 
-		bool containsDSW(const Vector3D& p);
+		bool containsDownNorthWest(const Vector3D& point);
 
-		Octant* mDSW();
+		bool containsDownNorthEast(const Vector3D& point);
 
-		bool containsDSE(const Vector3D& p);
+		bool containsDownSouthWest(const Vector3D& point);
 
-		Octant* mDSE();
+		bool containsDownSouthEast(const Vector3D& point);
 };

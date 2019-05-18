@@ -14,7 +14,11 @@ class Vector3D {
 
 		Vector3D& operator +=(const Vector3D& other);
 
+		Vector3D& operator +=(const double& other);
+
 		Vector3D& operator -=(const Vector3D& other);
+
+		Vector3D& operator -=(const double& other);
 
 		Vector3D& operator *=(const double& other);
 
@@ -22,11 +26,23 @@ class Vector3D {
 
 		friend Vector3D operator +(const Vector3D& left, const Vector3D& right);
 
+		friend Vector3D operator +(const Vector3D& left, const double& right);
+
 		friend Vector3D operator -(const Vector3D& left, const Vector3D& right);
+
+		friend Vector3D operator -(const Vector3D& left, const double& right);
 
 		friend Vector3D operator *(const Vector3D& left, const double& right);
 
 		friend Vector3D operator *(const double& left, const Vector3D& right);
 
 		friend Vector3D operator /(const Vector3D& left, const double& right);
+
+		friend bool operator <(const Vector3D& left, const Vector3D& right);
+
+		friend bool operator <=(const Vector3D& left, const Vector3D& right);
+
+		friend bool operator >(const Vector3D& left, const Vector3D& right);
+
+		friend bool operator >=(const Vector3D& left, const Vector3D& right);
 };

@@ -100,24 +100,24 @@ void Bhtree::insert(Body* body) {
 		if(rootOctant->isInN(updatedBody->position)) {
 			if(rootOctant->isInE(updatedBody->position)) {
 				if(upNorthEast == nullptr) {
-					upNorthEast = new Bhtree(rootOctant->mUNE());
+					upNorthEast = new Bhtree(rootOctant->centerUpNorthEast());
 				}
 				upNorthEast->insert(updatedBody);
 			} else {
 				if(upNorthWest == nullptr) {
-					upNorthWest = new Bhtree(rootOctant->mUNW());
+					upNorthWest = new Bhtree(rootOctant->centerUpNorthWest());
 				}
 				upNorthWest->insert(updatedBody);
 			}
 		} else {
 			if(rootOctant->isInE(updatedBody->position)) {
 				if(upSouthEast == nullptr) {
-					upSouthEast = new Bhtree(rootOctant->mUSE());
+					upSouthEast = new Bhtree(rootOctant->centerUpSouthEast());
 				}
 				upSouthEast->insert(updatedBody);
 			} else {
 				if(upSouthWest == nullptr) {
-					upSouthWest = new Bhtree(rootOctant->mUSW());
+					upSouthWest = new Bhtree(rootOctant->centerUpSouthWest());
 				}
 				upSouthWest->insert(updatedBody);
 			}
@@ -126,68 +126,68 @@ void Bhtree::insert(Body* body) {
 		if(rootOctant->isInN(updatedBody->position)) {
 			if(rootOctant->isInE(updatedBody->position)) {
 				if(downNorthEast == nullptr) {
-					downNorthEast = new Bhtree(rootOctant->mDNE());
+					downNorthEast = new Bhtree(rootOctant->centerDownNorthEast());
 				}
 				downNorthEast->insert(updatedBody);
 			} else {
 				if(downNorthWest == nullptr) {
-					downNorthWest = new Bhtree(rootOctant->mDNW());
+					downNorthWest = new Bhtree(rootOctant->centerDownNorthWest());
 				}
 				downNorthWest->insert(updatedBody);
 			}
 		} else {
 			if(rootOctant->isInE(updatedBody->position)) {
 				if(downSouthEast == nullptr) {
-					downSouthEast = new Bhtree(rootOctant->mDSE());
+					downSouthEast = new Bhtree(rootOctant->centerDownSouthEast());
 				}
 				downSouthEast->insert(updatedBody);
 			} else {
 				if(downSouthWest == nullptr) {
-					downSouthWest = new Bhtree(rootOctant->mDSW());
+					downSouthWest = new Bhtree(rootOctant->centerDownSouthWest());
 				}
 				downSouthWest->insert(updatedBody);
 			}
 		}
 	}
 
-	// if (rootOctant->containsUNW(updatedBody->position))
+	// if (rootOctant->containsUpNorthWest(updatedBody->position))
 	// {
-	// 	if (upNorthWest == nullptr) { upNorthWest = new Bhtree(rootOctant->mUNW()); }
+	// 	if (upNorthWest == nullptr) { upNorthWest = new Bhtree(rootOctant->centerUpNorthWest()); }
 	// 	upNorthWest->insert(updatedBody);
 	// }
-	// else if(rootOctant->containsUNE(updatedBody->position))
+	// else if(rootOctant->containsUpNorthEast(updatedBody->position))
 	// {
-	// 	if (upNorthEast == nullptr) { upNorthEast = new Bhtree(rootOctant->mUNE()); }
+	// 	if (upNorthEast == nullptr) { upNorthEast = new Bhtree(rootOctant->centerUpNorthEast()); }
 	// 	upNorthEast->insert(updatedBody);
 	// }
-	// else if (rootOctant->containsUSW(updatedBody->position))
+	// else if (rootOctant->containsUpSouthWest(updatedBody->position))
 	// {
-	// 	if (upSouthWest == nullptr) { upSouthWest = new Bhtree(rootOctant->mUSW()); }
+	// 	if (upSouthWest == nullptr) { upSouthWest = new Bhtree(rootOctant->centerUpSouthWest()); }
 	// 	upSouthWest->insert(updatedBody);
 	// }
-	// else if (rootOctant->containsUSE(updatedBody->position))
+	// else if (rootOctant->containsUpSouthEast(updatedBody->position))
 	// {
-	// 	if (upSouthEast == nullptr) { upSouthEast = new Bhtree(rootOctant->mUSE()); }
+	// 	if (upSouthEast == nullptr) { upSouthEast = new Bhtree(rootOctant->centerUpSouthEast()); }
 	// 	upSouthEast->insert(updatedBody);
 	// }
-	// else if (rootOctant->containsDNW(updatedBody->position))
+	// else if (rootOctant->containsDownNorthWest(updatedBody->position))
 	// {
-	// 	if (downNorthWest == nullptr) { downNorthWest = new Bhtree(rootOctant->mDNW()); }
+	// 	if (downNorthWest == nullptr) { downNorthWest = new Bhtree(rootOctant->centerDownNorthWest()); }
 	// 	downNorthWest->insert(updatedBody);
 	// }
-	// else if (rootOctant->containsDNE(updatedBody->position))
+	// else if (rootOctant->containsDownNorthEast(updatedBody->position))
 	// {
-	// 	if (downNorthEast == nullptr) { downNorthEast = new Bhtree(rootOctant->mDNE()); }
+	// 	if (downNorthEast == nullptr) { downNorthEast = new Bhtree(rootOctant->centerDownNorthEast()); }
 	// 	downNorthEast->insert(updatedBody);
 	// }
-	// else if (rootOctant->containsDSW(updatedBody->position))
+	// else if (rootOctant->containsDownSouthWest(updatedBody->position))
 	// {
-	// 	if (downSouthWest == nullptr) { downSouthWest = new Bhtree(rootOctant->mDSW()); }
+	// 	if (downSouthWest == nullptr) { downSouthWest = new Bhtree(rootOctant->centerDownSouthWest()); }
 	// 	downSouthWest->insert(updatedBody);
 	// }
 	// else
 	// {
-	// 	if (downSouthEast == nullptr) { downSouthEast = new Bhtree(rootOctant->mDSE()); }
+	// 	if (downSouthEast == nullptr) { downSouthEast = new Bhtree(rootOctant->centerDownSouthEast()); }
 	// 	downSouthEast->insert(updatedBody);
 	// }
 

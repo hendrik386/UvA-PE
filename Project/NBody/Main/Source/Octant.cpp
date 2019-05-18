@@ -1,329 +1,194 @@
 #include "Octant.hpp"
 
-Octant::Octant(const Vector3D& m, const double l) : center(m) {
-	length = l;
-	lengthDiv2 = length / 2.0f;
-	lengthDiv4 = length / 4.0f;
-
-	plusBound[0] = center.x + lengthDiv2;
-	plusBound[1] = center.y + lengthDiv2;
-	plusBound[2] = center.z + lengthDiv2;
-
-	minBound[0] = center.x - lengthDiv2;
-	minBound[1] = center.y - lengthDiv2;
-	minBound[2] = center.z - lengthDiv2;
-
-	double midZ = center.z + lengthDiv4;
-	plusZ = midZ + lengthDiv4;
-	minZ = midZ - lengthDiv4;
-
-	double midY = center.y + lengthDiv4;
-	plusY = midY + lengthDiv4;
-	minY = midY - lengthDiv4;
-
-	double midX = center.x + lengthDiv4;
-	plusX = midX + lengthDiv4;
-	minX = midX - lengthDiv4;
+Octant::Octant(const Vector3D& center, const double& length) :
+	center(center),
+	length(length),
+	lengthDiv2(length / 2.0f),
+	lengthDiv4(length / 4.0f),
+	positiveBound(center + lengthDiv2),
+	negativeBound(center - lengthDiv2),
+	positive(center + lengthDiv4 + lengthDiv4),
+	negative(center + lengthDiv4 - lengthDiv4) {
 }
 
 double Octant::getLength() {
 	return length;
 }
 
-bool Octant::contains(const Vector3D& p) {
-	return p.x <= plusBound[0] && p.x >= minBound[0] &&
-		p.y <= plusBound[1] && p.y >= minBound[1] &&
-		p.z <= plusBound[2] && p.z >= minBound[2];
+bool Octant::contains(const Vector3D& point) {
+	return point.x <= positiveBound.x && point.x >= negativeBound.x && point.y <= positiveBound.y && point.y >= negativeBound.y && point.z <= positiveBound.z && point.z >= negativeBound.z;
 
-	// return p.x <= center->x + length / 2.0 && p.x >= center->x - length / 2.0 &&
-	// 	   p.y <= center->y + length / 2.0 && p.y >= center->y - length / 2.0 &&
-	// 	   p.z <= center->z + length / 2.0 && p.z >= center->z - length / 2.0;
+	// return point.x <= center->x + length / 2.0 && point.x >= center->x - length / 2.0 &&
+	// 	   point.y <= center->y + length / 2.0 && point.y >= center->y - length / 2.0 &&
+	// 	   point.z <= center->z + length / 2.0 && point.z >= center->z - length / 2.0;
 }
 
-bool Octant::isInU(const Vector3D& p) {
+bool Octant::isInU(const Vector3D& point) {
 	// double midZ = center.z + lengthDiv4;
-	// double plusZ = midZ + lengthDiv4;
-	// double minZ = midZ - lengthDiv4;
+	// double positive.z = midZ + lengthDiv4;
+	// double negative.z = midZ - lengthDiv4;
 
-	return p.z <= plusZ && p.z >= minZ;
+	return point.z <= positive.z && point.z >= negative.z;
 }
 
-bool Octant::isInN(const Vector3D& p) {
+bool Octant::isInN(const Vector3D& point) {
 	// double midY = center.y + lengthDiv4;
-	// double plusY = midY + lengthDiv4;
-	// double minY = midY - lengthDiv4;
+	// double positive.y = midY + lengthDiv4;
+	// double negative.y = midY - lengthDiv4;
 
-	return p.y <= plusY && p.y >= minY;
+	return point.y <= positive.y && point.y >= negative.y;
 }
 
-bool Octant::isInE(const Vector3D& p) {
+bool Octant::isInE(const Vector3D& point) {
 	// double midX = center.x + lengthDiv4;
-	// double plusX = midX + lengthDiv4;
-	// double minX = midX - lengthDiv4;
+	// double positive.x = midX + lengthDiv4;
+	// double negative.x = midX - lengthDiv4;
 
-	return p.x <= plusX && p.x >= minX;
+	return point.x <= positive.x && point.x >= negative.x;
 }
 
-bool Octant::containsUNW(const Vector3D& p) {
-	Vector3D newMid(
+Octant* Octant::centerUpNorthWest() {
+	return new Octant(
+		Vector3D(
+			center.x - lengthDiv4,
+			center.y + lengthDiv4,
+			center.z + lengthDiv4
+		),
+		lengthDiv2
+	);
+}
+
+Octant* Octant::centerUpNorthEast() {
+	return new Octant(center + lengthDiv4, lengthDiv2);
+}
+
+Octant* Octant::centerUpSouthWest() {
+	return new Octant(
+		Vector3D(
+			center.x - lengthDiv4,
+			center.y - lengthDiv4,
+			center.z + lengthDiv4
+		),
+		lengthDiv2
+	);
+}
+
+Octant* Octant::centerUpSouthEast() {
+	return new Octant(
+		Vector3D(
+			center.x + lengthDiv4,
+			center.y - lengthDiv4,
+			center.z + lengthDiv4
+		),
+		lengthDiv2
+	);
+}
+
+Octant* Octant::centerDownNorthWest() {
+	return new Octant(
+		Vector3D(
+			center.x - lengthDiv4,
+			center.y + lengthDiv4,
+			center.z - lengthDiv4
+		),
+		lengthDiv2
+	);
+}
+
+Octant* Octant::centerDownNorthEast() {
+	return new Octant(
+		Vector3D(
+			center.x + lengthDiv4,
+			center.y + lengthDiv4,
+			center.z - lengthDiv4
+		),
+		lengthDiv2
+	);
+}
+
+Octant* Octant::centerDownSouthWest() {
+	return new Octant(center - lengthDiv4, lengthDiv2);
+}
+
+Octant* Octant::centerDownSouthEast() {
+	return new Octant(
+		Vector3D(
+			center.x + lengthDiv4,
+			center.y - lengthDiv4,
+			center.z - lengthDiv4
+		),
+		lengthDiv2
+	);
+}
+
+bool Octant::containsUpNorthWest(const Vector3D& point) {
+	Vector3D centerUpNorthWest(
 		center.x - lengthDiv4,
 		center.y + lengthDiv4,
 		center.z + lengthDiv4
 	);
 
-	double plusBound[3];
-	double minBound[3];
-
-	plusBound[0] = newMid.x + lengthDiv4;
-	plusBound[1] = newMid.y + lengthDiv4;
-	plusBound[2] = newMid.z + lengthDiv4;
-
-	minBound[0] = newMid.x - lengthDiv4;
-	minBound[1] = newMid.y - lengthDiv4;
-	minBound[2] = newMid.z - lengthDiv4;
-
-	return p.x <= plusBound[0] && p.x >= minBound[0] &&
-		p.y <= plusBound[1] && p.y >= minBound[1] &&
-		p.z <= plusBound[2] && p.z >= minBound[2];
+	return point >= centerUpNorthWest - lengthDiv4 && point <= centerUpNorthWest + lengthDiv4;
 }
 
-Octant* Octant::mUNW() {
-	Vector3D newMid(
-		center.x - lengthDiv4,
-		center.y + lengthDiv4,
-		center.z + lengthDiv4
-	);
+bool Octant::containsUpNorthEast(const Vector3D& point) {
+	Vector3D centerUpNorthEast = center + lengthDiv4;
 
-	return new Octant(newMid, lengthDiv2);
+	return point >= centerUpNorthEast - lengthDiv4 && point <= centerUpNorthEast + lengthDiv4;
 }
 
-bool Octant::containsUNE(const Vector3D& p) {
-	Vector3D newMid(
-		center.x + lengthDiv4,
-		center.y + lengthDiv4,
-		center.z + lengthDiv4
-	);
-
-	double plusBound[3];
-	double minBound[3];
-
-	plusBound[0] = newMid.x + lengthDiv4;
-	plusBound[1] = newMid.y + lengthDiv4;
-	plusBound[2] = newMid.z + lengthDiv4;
-
-	minBound[0] = newMid.x - lengthDiv4;
-	minBound[1] = newMid.y - lengthDiv4;
-	minBound[2] = newMid.z - lengthDiv4;
-
-	return p.x <= plusBound[0] && p.x >= minBound[0] &&
-		p.y <= plusBound[1] && p.y >= minBound[1] &&
-		p.z <= plusBound[2] && p.z >= minBound[2];
-}
-
-Octant* Octant::mUNE() {
-	Vector3D newMid(
-		center.x + lengthDiv4,
-		center.y + lengthDiv4,
-		center.z + lengthDiv4
-	);
-
-	return new Octant(newMid, lengthDiv2);
-}
-
-bool Octant::containsUSW(const Vector3D& p) {
-	Vector3D newMid(
+bool Octant::containsUpSouthWest(const Vector3D& point) {
+	Vector3D centerUpSouthWest(
 		center.x - lengthDiv4,
 		center.y - lengthDiv4,
 		center.z + lengthDiv4
 	);
 
-	double plusBound[3];
-	double minBound[3];
-
-	plusBound[0] = newMid.x + lengthDiv4;
-	plusBound[1] = newMid.y + lengthDiv4;
-	plusBound[2] = newMid.z + lengthDiv4;
-
-	minBound[0] = newMid.x - lengthDiv4;
-	minBound[1] = newMid.y - lengthDiv4;
-	minBound[2] = newMid.z - lengthDiv4;
-
-	return p.x <= plusBound[0] && p.x >= minBound[0] &&
-		p.y <= plusBound[1] && p.y >= minBound[1] &&
-		p.z <= plusBound[2] && p.z >= minBound[2];
+	return point >= centerUpSouthWest - lengthDiv4 && point <= centerUpSouthWest + lengthDiv4;
 }
 
-Octant* Octant::mUSW() {
-	Vector3D newMid(
-		center.x - lengthDiv4,
-		center.y - lengthDiv4,
-		center.z + lengthDiv4
-	);
-
-	return new Octant(newMid, lengthDiv2);
-}
-
-bool Octant::containsUSE(const Vector3D& p) {
-	Vector3D newMid(
+bool Octant::containsUpSouthEast(const Vector3D& point) {
+	Vector3D centerUpSouthEast(
 		center.x + lengthDiv4,
 		center.y - lengthDiv4,
 		center.z + lengthDiv4
 	);
 
-	double plusBound[3];
-	double minBound[3];
-
-	plusBound[0] = newMid.x + lengthDiv4;
-	plusBound[1] = newMid.y + lengthDiv4;
-	plusBound[2] = newMid.z + lengthDiv4;
-
-	minBound[0] = newMid.x - lengthDiv4;
-	minBound[1] = newMid.y - lengthDiv4;
-	minBound[2] = newMid.z - lengthDiv4;
-
-	return p.x <= plusBound[0] && p.x >= minBound[0] &&
-		p.y <= plusBound[1] && p.y >= minBound[1] &&
-		p.z <= plusBound[2] && p.z >= minBound[2];
+	return point >= centerUpSouthEast - lengthDiv4 && point <= centerUpSouthEast + lengthDiv4;
 }
 
-Octant* Octant::mUSE() {
-	Vector3D newMid(
-		center.x + lengthDiv4,
-		center.y - lengthDiv4,
-		center.z + lengthDiv4
-	);
-
-	return new Octant(newMid, lengthDiv2);
-}
-
-bool Octant::containsDNW(const Vector3D& p) {
-	Vector3D newMid(
+bool Octant::containsDownNorthWest(const Vector3D& point) {
+	Vector3D centerDownNorthWest(
 		center.x - lengthDiv4,
 		center.y + lengthDiv4,
 		center.z - lengthDiv4
 	);
 
-	double plusBound[3];
-	double minBound[3];
-
-	plusBound[0] = newMid.x + lengthDiv4;
-	plusBound[1] = newMid.y + lengthDiv4;
-	plusBound[2] = newMid.z + lengthDiv4;
-
-	minBound[0] = newMid.x - lengthDiv4;
-	minBound[1] = newMid.y - lengthDiv4;
-	minBound[2] = newMid.z - lengthDiv4;
-
-	return p.x <= plusBound[0] && p.x >= minBound[0] &&
-		p.y <= plusBound[1] && p.y >= minBound[1] &&
-		p.z <= plusBound[2] && p.z >= minBound[2];
+	return point >= centerDownNorthWest - lengthDiv4 && point <= centerDownNorthWest + lengthDiv4;
 }
 
-Octant* Octant::mDNW() {
-	Vector3D newMid(
-		center.x - lengthDiv4,
-		center.y + lengthDiv4,
-		center.z - lengthDiv4
-	);
-
-	return new Octant(newMid, lengthDiv2);
-}
-
-bool Octant::containsDNE(const Vector3D& p) {
-	Vector3D newMid(
+bool Octant::containsDownNorthEast(const Vector3D& point) {
+	Vector3D centerDownNorthEast(
 		center.x + lengthDiv4,
 		center.y + lengthDiv4,
 		center.z - lengthDiv4
 	);
 
-	double plusBound[3];
-	double minBound[3];
-
-	plusBound[0] = newMid.x + lengthDiv4;
-	plusBound[1] = newMid.y + lengthDiv4;
-	plusBound[2] = newMid.z + lengthDiv4;
-
-	minBound[0] = newMid.x - lengthDiv4;
-	minBound[1] = newMid.y - lengthDiv4;
-	minBound[2] = newMid.z - lengthDiv4;
-
-	return p.x <= plusBound[0] && p.x >= minBound[0] &&
-		p.y <= plusBound[1] && p.y >= minBound[1] &&
-		p.z <= plusBound[2] && p.z >= minBound[2];
+	return point >= centerDownNorthEast - lengthDiv4 && point <= centerDownNorthEast + lengthDiv4;
 }
 
-Octant* Octant::mDNE() {
-	Vector3D newMid(
-		center.x + lengthDiv4,
-		center.y + lengthDiv4,
-		center.z - lengthDiv4
-	);
+bool Octant::containsDownSouthWest(const Vector3D& point) {
+	Vector3D centerDownSouthWest = center - lengthDiv4;
 
-	return new Octant(newMid, lengthDiv2);
+	return point >= centerDownSouthWest - lengthDiv4 && point <= centerDownSouthWest + lengthDiv4;
 }
 
-bool Octant::containsDSW(const Vector3D& p) {
-	Vector3D newMid(
-		center.x - lengthDiv4,
-		center.y - lengthDiv4,
-		center.z - lengthDiv4
-	);
-
-	double plusBound[3];
-	double minBound[3];
-
-	plusBound[0] = newMid.x + lengthDiv4;
-	plusBound[1] = newMid.y + lengthDiv4;
-	plusBound[2] = newMid.z + lengthDiv4;
-
-	minBound[0] = newMid.x - lengthDiv4;
-	minBound[1] = newMid.y - lengthDiv4;
-	minBound[2] = newMid.z - lengthDiv4;
-
-	return p.x <= plusBound[0] && p.x >= minBound[0] &&
-		p.y <= plusBound[1] && p.y >= minBound[1] &&
-		p.z <= plusBound[2] && p.z >= minBound[2];
-}
-
-Octant* Octant::mDSW() {
-	Vector3D newMid(
-		center.x - lengthDiv4,
-		center.y - lengthDiv4,
-		center.z - lengthDiv4
-	);
-
-	return new Octant(newMid, lengthDiv2);
-}
-
-bool Octant::containsDSE(const Vector3D& p) {
-	Vector3D newMid(
+bool Octant::containsDownSouthEast(const Vector3D& point) {
+	Vector3D centerDownSouthEast(
 		center.x + lengthDiv4,
 		center.y - lengthDiv4,
 		center.z - lengthDiv4
 	);
 
-	double plusBound[3];
-	double minBound[3];
-
-	plusBound[0] = newMid.x + lengthDiv4;
-	plusBound[1] = newMid.y + lengthDiv4;
-	plusBound[2] = newMid.z + lengthDiv4;
-
-	minBound[0] = newMid.x - lengthDiv4;
-	minBound[1] = newMid.y - lengthDiv4;
-	minBound[2] = newMid.z - lengthDiv4;
-
-	return p.x <= plusBound[0] && p.x >= minBound[0] &&
-		p.y <= plusBound[1] && p.y >= minBound[1] &&
-		p.z <= plusBound[2] && p.z >= minBound[2];
-}
-
-Octant* Octant::mDSE() {
-	Vector3D newMid(
-		center.x + lengthDiv4,
-		center.y - lengthDiv4,
-		center.z - lengthDiv4
-	);
-
-	return new Octant(newMid, lengthDiv2);
+	return point >= centerDownSouthEast - lengthDiv4 && point <= centerDownSouthEast + lengthDiv4;
 }
