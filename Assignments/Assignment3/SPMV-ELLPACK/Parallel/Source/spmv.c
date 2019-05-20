@@ -204,7 +204,7 @@ int main(int argc, char** argv) {
 	struct timeval after;
 	gettimeofday(&after, NULL);
 
-	printf("Reference code: %10.6f seconds \n", ((after.tv_sec + (after.tv_usec / 1000000.0)) - (before.tv_sec + (before.tv_usec / 1000000.0))) / REP);
+	printf("Reference code: %10.8f seconds \n", ((after.tv_sec + (after.tv_usec / 1000000.0)) - (before.tv_sec + (before.tv_usec / 1000000.0))) / REP);
 	#endif
 
 	FILE* outputFile;
