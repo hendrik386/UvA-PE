@@ -5,11 +5,10 @@ struct matrix {
 	int rows;
 	int columns;
 
-	int* rowColumns_;
-	int maximumRowColumns_;
-	int* columnIndices_;
+	int* row_columns_;
+	int maximum_row_columns_;
+	int* column_indices_;
 	float* values_;
-
 };
 
 struct matrix matrix_construct(const int rows, const int columns, const float* matrix);

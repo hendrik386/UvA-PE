@@ -9,28 +9,28 @@ struct matrix matrix_construct(const int rows, const int columns, const float* m
 	result.rows = rows;
 	result.columns = columns;
 
-	// Calculate rowColumns_
-	result.rowColumns_ = malloc(rows * sizeof(int));
-	result.maximumRowColumns_ = 0;
+	// Calculate row_columns_
+	result.row_columns_ = malloc(rows * sizeof(int));
+	result.maximum_row_columns_ = 0;
 	int row;
 	int column;
 	for(row = 0; row < rows; ++row) {
 		for(column = 0; column < columns; ++column) {
 			if(matrix[row * columns + column] != 0) {
-				result.rowColumns_[row] += 1;
+				result.row_columns_[row] += 1;
 
 				// Calculate maximum value
-				const int currentRowColumns = result.rowColumns_[row];
-				if(currentRowColumns > result.maximumRowColumns_) {
-					result.maximumRowColumns_ = currentRowColumns;
+				const int currentRowColumns = result.row_columns_[row];
+				if(currentRowColumns > result.maximum_row_columns_) {
+					result.maximum_row_columns_ = currentRowColumns;
 				}
 			}
 		}
 	}
 
 	// Allocate and fill data arrays
-	result.columnIndices_ = (int*) malloc(rows * result.maximumRowColumns_ * sizeof(float));
-	result.values_ = (float*) malloc(rows * result.maximumRowColumns_ * sizeof(float));
+	result.column_indices_ = (int*) malloc(rows * result.maximum_row_columns_ * sizeof(float));
+	result.values_ = (float*) malloc(rows * result.maximum_row_columns_ * sizeof(float));
 	for(row = 0; row < rows; ++row) {
 		int filledColumns = 0;
 
@@ -38,7 +38,7 @@ struct matrix matrix_construct(const int rows, const int columns, const float* m
 			float value = matrix[row * columns + column];
 
 			if(value != 0) {
-				result.values_[row * result.maximumRowColumns_ + filledColumns++] = value;
+				result.values_[row * result.maximum_row_columns_ + filledColumns++] = value;
 			}
 		}
 	}
@@ -47,17 +47,17 @@ struct matrix matrix_construct(const int rows, const int columns, const float* m
 }
 
 void matrix_destroy(struct matrix* matrix) {
-	free(matrix->rowColumns_);
-	free(matrix->columnIndices_);
+	free(matrix->row_columns_);
+	free(matrix->column_indices_);
 	free(matrix->values_);
 }
 
 int matrix_get_value(struct matrix* matrix, const int row, const int column) {
 	int internalColumn;
 
-	for(internalColumn = 0; internalColumn < matrix->rowColumns_[row]; ++internalColumn) {
-		const int index = row * matrix->maximumRowColumns_ + internalColumn;
-		const int currentColumn = matrix->columnIndices_[index];
+	for(internalColumn = 0; internalColumn < matrix->row_columns_[row]; ++internalColumn) {
+		const int index = row * matrix->maximum_row_columns_ + internalColumn;
+		const int currentColumn = matrix->column_indices_[index];
 
 		if(currentColumn == column) {
 			return matrix->values_[index];
@@ -75,8 +75,8 @@ void matrix_multiply(const struct matrix* matrix, const float* vector, float* re
 	for(row = 0; row < matrix->rows; ++row) {
 		result_vector[row] = 0;
 
-		for(column = 0; column < matrix->rowColumns_[row]; ++column) {
-			result_vector[row] += matrix->values_[row * matrix->maximumRowColumns_ + column] * vector[matrix->columnIndices_[row * matrix->maximumRowColumns_ + column]];
+		for(column = 0; column < matrix->row_columns_[row]; ++column) {
+			result_vector[row] += matrix->values_[row * matrix->maximum_row_columns_ + column] * vector[matrix->column_indices_[row * matrix->maximum_row_columns_ + column]];
 		}
 	}
 }
