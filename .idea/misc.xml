@@ -10,6 +10,7 @@
       <file path="$PROJECT_DIR$/Assignments/Assignment2/3/cpu/with_mutual_exclusion/software_transactional/src" />
       <file path="$PROJECT_DIR$/Assignments/Assignment2/3/gpu/src" />
       <file path="$PROJECT_DIR$/Assignments/Assignment2/3/src" />
+      <file path="$PROJECT_DIR$/Assignments/Assignment3/SPMV-ELLPACK/Sequential/Source" />
       <file path="$PROJECT_DIR$/Project/NBody/Main/Source" />
       <file path="$PROJECT_DIR$/Project/NBody/Test/Source" />
     </sourceRoots>

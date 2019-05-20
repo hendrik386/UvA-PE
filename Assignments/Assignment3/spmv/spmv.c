@@ -126,7 +126,7 @@ int main (int argc, char** argv) {
  float *A, *B, *C;
  struct timeval before, after;
  int r, m, n, err;
- int nzA=0, is_pattern = 1;
+ int nzA=0, is_pattern = 0;
  FILE *fa, *fc; 
  
 #ifdef GENERATE 
