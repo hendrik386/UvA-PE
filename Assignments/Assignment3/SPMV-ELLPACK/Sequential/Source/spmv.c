@@ -187,11 +187,9 @@ int main(int argc, char** argv) {
 	fclose(inputFile);
 	#endif
 
-	#ifdef TIMING
 	//naive implementation
 	struct timeval before;
 	gettimeofday(&before, NULL);
-	#endif
 
 	int repetition;
 	for(repetition = 0; repetition < REP; repetition++) {
@@ -199,12 +197,10 @@ int main(int argc, char** argv) {
 		spmv(&matrix, vector, result_vector);
 	}
 
-	#ifdef TIMING
 	struct timeval after;
 	gettimeofday(&after, NULL);
 
 	printf("Reference code: %10.8f seconds \n", ((after.tv_sec + (after.tv_usec / 1000000.0)) - (before.tv_sec + (before.tv_usec / 1000000.0))) / REP);
-	#endif
 
 	FILE* outputFile;
 	if((outputFile = fopen(argv[2], "wt")) == NULL) {
