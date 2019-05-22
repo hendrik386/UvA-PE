@@ -4,6 +4,7 @@
 #include <queue>
 #include <condition_variable>
 #include <type_traits>
+#include <iostream>
 
 template<typename ttype>
 class Safequeue

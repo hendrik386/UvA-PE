@@ -17,14 +17,14 @@ class Universe {
 
 		void updateBodies();
 
-		Worker upNorthWestWorker;
-		Worker upNorthEastWorker;
-		Worker upSouthWorker;
-		Worker upSouthEastWorker;
-		Worker downNorthWestWorker;
-		Worker downNorthEastWorker;
-		Worker downSouthWestWorker;
-		Worker downSouthEastWorker;
+		Worker *m_upNorthWestWorker = nullptr;
+		Worker *m_upNorthEastWorker = nullptr;
+		Worker *m_upSouthWestWorker = nullptr;
+		Worker *m_upSouthEastWorker = nullptr;
+		Worker *m_downNorthWestWorker = nullptr;
+		Worker *m_downNorthEastWorker = nullptr;
+		Worker *m_downSouthWestWorker = nullptr;
+		Worker *m_downSouthEastWorker = nullptr;
 
 	public:
 		static Universe loadFromCsvFile(const std::filesystem::path& filePath, const double& systemSize);
@@ -38,7 +38,9 @@ class Universe {
 		 */
 		Universe(std::vector<Body> bodies, const double& systemSize);
 
-		// Universe(const int& bodyCount, const double& systemSize);
+		Universe(const int& bodyCount, const double& systemSize);
+
+		~Universe();
 
 		/**
 		 * Performs universe simulation.

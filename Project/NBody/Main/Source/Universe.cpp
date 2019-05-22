@@ -6,6 +6,8 @@
 #include <random>
 #include <csv.h>
 #include <omp.h>
+#include <iostream>
+#include <memory>
 
 #include "Bhtree.hpp"
 #include "Utility.hpp"
@@ -81,12 +83,79 @@ void Universe::interactBodies() {
 	Octant root = Octant(Vector3D(0.0, 0.0, 0.1374 /* Does this help? */), 60 * systemSize);
 	Bhtree tree(root);
 
-	for(int index = 1; index < bodies.size(); index++) {
-		Body& body = bodies[index];
+	tree.insert(bodies[1]);
 
-		if(root.contains(body.position)) {
-			tree.insert(body);
+	m_upNorthWestWorker->setTree(std::move(std::make_unique<Bhtree>(root.centerUpNorthWest())));
+	m_upNorthEastWorker->setTree(std::move(std::make_unique<Bhtree>(root.centerUpNorthEast())));
+	m_upSouthWestWorker->setTree(std::move(std::make_unique<Bhtree>(root.centerUpSouthWest())));
+	m_upSouthEastWorker->setTree(std::move(std::make_unique<Bhtree>(root.centerUpSouthEast())));
+	m_downNorthWestWorker->setTree(std::move(std::make_unique<Bhtree>(root.centerDownNorthWest())));
+	m_downNorthEastWorker->setTree(std::move(std::make_unique<Bhtree>(root.centerDownNorthEast())));
+	m_downSouthWestWorker->setTree(std::move(std::make_unique<Bhtree>(root.centerDownSouthWest())));
+	m_downSouthEastWorker->setTree(std::move(std::make_unique<Bhtree>(root.centerDownSouthEast())));
+
+	bool bodyIsInN;
+	bool bodyIsInE;
+
+	for(int index = 2; index < bodies.size(); index++) {
+		// Body& body = bodies[index];
+
+		// if(root.contains(body.position)) {
+		// 	tree.insert(body);
+		// }
+
+		bodyIsInN = root.isInN(bodies[index].position);
+		bodyIsInE = root.isInE(bodies[index].position);
+
+		if (root.isInU(bodies[index].position)) {
+			if (bodyIsInN) {
+				if (bodyIsInE) {
+					m_upNorthEastWorker->pushBody(&bodies[index]);
+				}
+				else {
+					m_upNorthWestWorker->pushBody(&bodies[index]);
+				}
+			}
+			else {
+				if (bodyIsInE) {
+					m_upSouthEastWorker->pushBody(&bodies[index]);
+				}
+				else {
+					m_upSouthWestWorker->pushBody(&bodies[index]);
+				}
+			}
 		}
+		else {
+			if (bodyIsInN) {
+				if (bodyIsInE) {
+					m_downNorthEastWorker->pushBody(&bodies[index]);
+				}
+				else {
+					m_downNorthWestWorker->pushBody(&bodies[index]);
+				}
+			}
+			else {
+				if (bodyIsInE) {
+					m_downSouthEastWorker->pushBody(&bodies[index]);
+				}
+				else {
+					m_downSouthWestWorker->pushBody(&bodies[index]);
+				}
+			}
+		}
+	}
+
+	bool done = false;
+	while (!done)
+	{	done = true;
+		if (m_upNorthEastWorker->working()){ done = false; continue;}
+		if (m_upNorthWestWorker->working()){ done = false; continue;}
+		if (m_upSouthEastWorker->working()){ done = false; continue;}
+		if (m_upSouthWestWorker->working()){ done = false; continue;}
+		if (m_downNorthEastWorker->working()){ done = false; continue;}
+		if (m_downNorthWestWorker->working()){ done = false; continue;}
+		if (m_downSouthEastWorker->working()){ done = false; continue;}
+		if (m_downSouthWestWorker->working()){ done = false; continue;}
 	}
 
 	Utility::logDebug("Calculating particle interactions...");
@@ -163,10 +232,76 @@ Universe Universe::loadFromCsvFile(const std::filesystem::path& filePath, const 
 
 Universe::Universe(std::vector<Body> bodies, const double& systemSize) : bodies(std::move(bodies)), systemSize(systemSize) {
 	Utility::logInfo(std::to_string(SYSTEM_THICKNESS) + "AU thick disk\n");
+
+	if (m_upNorthWestWorker != nullptr) {
+		std::cerr << "Already allocated!" << std::endl;
+		exit(1);
+	}
+
+	m_upNorthWestWorker = new Worker();
+	m_upNorthEastWorker = new Worker();
+	m_upSouthWestWorker = new Worker();
+	m_upSouthEastWorker = new Worker();
+	m_downNorthWestWorker = new Worker();
+	m_downNorthEastWorker = new Worker();
+	m_downSouthWestWorker = new Worker();
+	m_downSouthEastWorker = new Worker();
+
+	m_upNorthWestWorker->start();
+	m_upNorthEastWorker->start();
+	m_upSouthWestWorker->start();
+	m_upSouthEastWorker->start();
+	m_downNorthWestWorker->start();
+	m_downNorthEastWorker->start();
+	m_downSouthWestWorker->start();
+	m_downSouthEastWorker->start();
 }
 
-// Universe::Universe(const int& bodyCount, const double& systemSize) : systemSize(systemSize), bodies(initializeBodies(bodyCount)) {
-// }
+Universe::Universe(const int& bodyCount, const double& systemSize) : systemSize(systemSize), bodies(initializeBodies(bodyCount)) {
+	
+	if (m_upNorthWestWorker != nullptr) {
+		std::cerr << "Already allocated!" << std::endl;
+		exit(1);
+	}
+
+	m_upNorthWestWorker = new Worker();
+	m_upNorthEastWorker = new Worker();
+	m_upSouthWestWorker = new Worker();
+	m_upSouthEastWorker = new Worker();
+	m_downNorthWestWorker = new Worker();
+	m_downNorthEastWorker = new Worker();
+	m_downSouthWestWorker = new Worker();
+	m_downSouthEastWorker = new Worker();
+
+	m_upNorthWestWorker->start();
+	m_upNorthEastWorker->start();
+	m_upSouthWestWorker->start();
+	m_upSouthEastWorker->start();
+	m_downNorthWestWorker->start();
+	m_downNorthEastWorker->start();
+	m_downSouthWestWorker->start();
+	m_downSouthEastWorker->start();
+}
+
+Universe::~Universe(){
+	m_upNorthWestWorker->stop();
+	m_upNorthEastWorker->stop();
+	m_upSouthWestWorker->stop();
+	m_upSouthEastWorker->stop();
+	m_downNorthWestWorker->stop();
+	m_downNorthEastWorker->stop();
+	m_downSouthWestWorker->stop();
+	m_downSouthEastWorker->stop();
+
+	delete(m_upNorthWestWorker);
+	delete(m_upNorthEastWorker);
+	delete(m_upSouthWestWorker);
+	delete(m_upSouthEastWorker);
+	delete(m_downNorthWestWorker);
+	delete(m_downNorthEastWorker);
+	delete(m_downSouthWestWorker);
+	delete(m_downSouthEastWorker);
+}
 
 void Universe::simulate(const int& steps, const int& renderInterval, const bool& createImages, const int& imageWidth, const int& imageHeight) {
 	Image image(imageWidth, imageHeight);

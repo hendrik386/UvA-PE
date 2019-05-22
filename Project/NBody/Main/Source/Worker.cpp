@@ -1,12 +1,25 @@
+#include <iostream>
+#include <thread>
+
 #include "Worker.hpp"
 #include "Body.hpp"
 #include "Bhtree.hpp"
 
-Worker::Worker(Bhtree *tree) :
-    m_tree(tree),
+Worker::Worker(std::unique_ptr<Bhtree> &&tree) :
+    m_tree(std::move(tree)),
     m_running(false),
     m_working(true)
 {
+}
+
+Worker::Worker() :
+    m_running(false),
+    m_working(true)
+{
+}
+
+void Worker::setTree(std::unique_ptr<Bhtree> &&tree) {
+    m_tree = std::move(tree);
 }
 
 void Worker::start() {
@@ -19,9 +32,11 @@ void Worker::start() {
 }
 
 void Worker::stop() {
+    // std::cout << "stop!" << std::endl;
     if (m_running) {
         m_running = false;
     }
+    m_bodiesQueue.notify();
     if (m_thisThread.joinable()) {
 		m_thisThread.join();
     }
@@ -49,6 +64,8 @@ void Worker::run() {
             insertBody(bod);
         }
         m_working = false;
+
+        // std::cout << std::endl << m_thisThread.get_id() << " done\n" << std::endl;
     }
 }
 

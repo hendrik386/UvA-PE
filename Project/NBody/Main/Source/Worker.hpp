@@ -2,12 +2,14 @@
 
 #include <thread>
 #include <atomic>
+#include <memory>
 
+#include "Bhtree.hpp"
 #include "safeQueue.hpp"
 
 class Body;
 
-class Bhtree;
+// class Bhtree;
 
 class Worker
 {
@@ -17,13 +19,15 @@ class Worker
         std::atomic<bool> m_working;
         std::atomic<bool> m_running;
 
-        Bhtree *m_tree;
+        std::unique_ptr<Bhtree> m_tree = nullptr;
 
         void run();
         void insertBody(Body *bod);
     public:
-        Worker(Bhtree *tree);
+        Worker(std::unique_ptr<Bhtree> &&tree);
+        Worker();
 
+        void setTree(std::unique_ptr<Bhtree> &&tree);
         void start();
         void stop();
         const bool running() const;
