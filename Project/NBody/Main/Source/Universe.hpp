@@ -6,6 +6,7 @@
 #include "Body.hpp"
 #include "Constants.hpp"
 #include "Image.hpp"
+#include "Worker.hpp"
 
 class Universe {
 		const double systemSize;
@@ -15,6 +16,15 @@ class Universe {
 		void interactBodies();
 
 		void updateBodies();
+
+		Worker upNorthWestWorker;
+		Worker upNorthEastWorker;
+		Worker upSouthWorker;
+		Worker upSouthEastWorker;
+		Worker downNorthWestWorker;
+		Worker downNorthEastWorker;
+		Worker downSouthWestWorker;
+		Worker downSouthEastWorker;
 
 	public:
 		static Universe loadFromCsvFile(const std::filesystem::path& filePath, const double& systemSize);
@@ -28,7 +38,7 @@ class Universe {
 		 */
 		Universe(std::vector<Body> bodies, const double& systemSize);
 
-		Universe(const int& bodyCount, const double& systemSize);
+		// Universe(const int& bodyCount, const double& systemSize);
 
 		/**
 		 * Performs universe simulation.

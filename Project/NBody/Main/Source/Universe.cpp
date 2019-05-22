@@ -165,8 +165,8 @@ Universe::Universe(std::vector<Body> bodies, const double& systemSize) : bodies(
 	Utility::logInfo(std::to_string(SYSTEM_THICKNESS) + "AU thick disk\n");
 }
 
-Universe::Universe(const int& bodyCount, const double& systemSize) : systemSize(systemSize), bodies(initializeBodies(bodyCount)) {
-}
+// Universe::Universe(const int& bodyCount, const double& systemSize) : systemSize(systemSize), bodies(initializeBodies(bodyCount)) {
+// }
 
 void Universe::simulate(const int& steps, const int& renderInterval, const bool& createImages, const int& imageWidth, const int& imageHeight) {
 	Image image(imageWidth, imageHeight);

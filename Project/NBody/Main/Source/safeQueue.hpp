@@ -23,7 +23,7 @@ class Safequeue
 		}
 
 
- 		void push(ttype&& msg) override
+ 		void push(ttype&& msg)
 		{
 			std::unique_lock<std::mutex> lock(this->m_msgQueueLock);
 			this->m_msgQueue.push(std::forward<ttype>(msg));
