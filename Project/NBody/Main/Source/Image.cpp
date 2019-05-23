@@ -10,6 +10,7 @@
 
 #include <cmath>
 #include <fstream>
+#include <vector>
 
 #include "Body.hpp"
 #include "Color.hpp"
@@ -102,7 +103,7 @@ void Image::createFrame(const int& step, const int& renderInterval, const std::v
 	writeRender(step, renderInterval);
 }
 
-void Image::renderBodies(const vector<Body>& bodies, const double& systemSize) {
+void Image::renderBodies(const std::vector<Body>& bodies, const double& systemSize) {
 	/// ORTHOGONAL PROJECTION
 	for(const auto& body : bodies) {
 		double x = toPixelSpace(body.position.x, width, systemSize);
