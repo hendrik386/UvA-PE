@@ -20,23 +20,23 @@ void Body::singleInteraction(Body& left, Body& right, const bool& singleTreePart
 	}
 
 	// Friction
-	if constexpr (ENABLE_FRICTION) {
-		if(singleTreePart) {
-			double friction = 0.5 / pow(2.0, FRICTION_FACTOR * (Utility::metersToAstronomicalUnits(distance + SOFTENING)));
+	// if constexpr (ENABLE_FRICTION) {
+	// 	if(singleTreePart) {
+	// 		double friction = 0.5 / pow(2.0, FRICTION_FACTOR * (Utility::metersToAstronomicalUnits(distance + SOFTENING)));
 
-			Utility::logInfo(std::to_string(friction) + "\n");
+	// 		Utility::logInfo(std::to_string(friction) + "\n");
 
-			if(friction > 0.0001) {
-				if(updateLeftFriction) {
-					left.acceleration += friction * (right.velocity - left.velocity) / 2;
-				}
+	// 		if(friction > 0.0001) {
+	// 			if(updateLeftFriction) {
+	// 				left.acceleration += friction * (right.velocity - left.velocity) / 2;
+	// 			}
 
-				if(updateRightFriction) {
-					right.acceleration -= friction * (left.velocity - right.velocity) / 2; // NOTE: Not sure if this is correct, but it is unused so not important for now
-				}
-			}
-		}
-	}
+	// 			if(updateRightFriction) {
+	// 				right.acceleration -= friction * (left.velocity - right.velocity) / 2; // NOTE: Not sure if this is correct, but it is unused so not important for now
+	// 			}
+	// 		}
+	// 	}
+	// }
 }
 
 Body::Body(const Vector3D& position, const Vector3D& velocity, const Vector3D& acceleration, const double& mass) : position(position), velocity(velocity), acceleration(acceleration), mass(mass) {

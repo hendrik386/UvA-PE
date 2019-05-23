@@ -12,6 +12,7 @@ class Bhtree {
 
 		Octant rootOctant;
 
+	public:
 		std::unique_ptr<Bhtree> upNorthWest = nullptr;
 
 		std::unique_ptr<Bhtree> upNorthEast = nullptr;
@@ -28,7 +29,7 @@ class Bhtree {
 
 		std::unique_ptr<Bhtree> downSouthEast = nullptr;
 
-	public:
+	
 		Bhtree(const Octant& rootOctant);
 
 		~Bhtree();
@@ -38,6 +39,8 @@ class Bhtree {
 		void insert(Body& body);
 
 		void interact(Body* __restrict__ body);
+
+		void begin(const Body& body);
 };
 
 

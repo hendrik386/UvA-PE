@@ -6,8 +6,6 @@
 #include <random>
 #include <csv.h>
 #include <omp.h>
-#include <iostream>
-#include <memory>
 
 #include "Bhtree.hpp"
 #include "Utility.hpp"
@@ -83,7 +81,18 @@ void Universe::interactBodies() {
 	Octant root = Octant(Vector3D(0.0, 0.0, 0.1374 /* Does this help? */), 60 * systemSize);
 	Bhtree tree(root);
 
-	tree.insert(bodies[1]);
+	int index = 1;
+
+	for(; index < bodies.size(); index++) {
+		Body& body = bodies[index];
+
+		if(root.contains(body.position)) {
+			tree.insert(body);
+			break;
+		}
+	}
+
+	++index;
 
 	m_upNorthWestWorker->setTree(std::move(std::make_unique<Bhtree>(root.centerUpNorthWest())));
 	m_upNorthEastWorker->setTree(std::move(std::make_unique<Bhtree>(root.centerUpNorthEast())));
@@ -97,12 +106,19 @@ void Universe::interactBodies() {
 	bool bodyIsInN;
 	bool bodyIsInE;
 
-	for(int index = 2; index < bodies.size(); index++) {
-		// Body& body = bodies[index];
+	for(; index < bodies.size(); index++) {
+		if (!root.contains(bodies[index].position)) {
+			continue;
+		}
 
-		// if(root.contains(body.position)) {
-		// 	tree.insert(body);
-		// }
+		if (tree.isExternal()) {
+			tree.insert(bodies[index]);
+			continue;
+		}
+		else {
+			tree.begin(bodies[index]);
+		}
+
 
 		bodyIsInN = root.isInN(bodies[index].position);
 		bodyIsInE = root.isInE(bodies[index].position);
@@ -158,6 +174,15 @@ void Universe::interactBodies() {
 		if (m_downSouthWestWorker->working()){ done = false; continue;}
 	}
 
+	if (m_upNorthEastWorker->hasWorked()) tree.upNorthEast = std::move(m_upNorthEastWorker->getTree());
+	if (m_upNorthWestWorker->hasWorked()) tree.upNorthWest = std::move(m_upNorthWestWorker->getTree());
+	if (m_upSouthEastWorker->hasWorked()) tree.upSouthEast = std::move(m_upSouthEastWorker->getTree());
+	if (m_upSouthWestWorker->hasWorked()) tree.upSouthWest = std::move(m_upSouthWestWorker->getTree());
+	if (m_downNorthEastWorker->hasWorked()) tree.downNorthEast = std::move(m_downNorthEastWorker->getTree());
+	if (m_downNorthWestWorker->hasWorked()) tree.downNorthWest = std::move(m_downNorthWestWorker->getTree());
+	if (m_downSouthEastWorker->hasWorked()) tree.downSouthEast = std::move(m_downSouthEastWorker->getTree());
+	if (m_downSouthWestWorker->hasWorked()) tree.downSouthWest = std::move(m_downSouthWestWorker->getTree());
+
 	Utility::logDebug("Calculating particle interactions...");
 
 	// Loop through interactions
@@ -183,16 +208,16 @@ void Universe::updateBodies() {
 	for(int index = 0; index < bodies.size(); ++index) {
 		Body& body = bodies[index];
 
-		if constexpr (DEBUG_INFO) {
-			if(index == 0) {
-				Utility::logDebug("Star x acceleration: " + std::to_string(body.acceleration.x));
-				Utility::logDebug("Star y acceleration: " + std::to_string(body.acceleration.y));
-			} else if(body.position.y > 0.0) {
-				massAbove += body.mass;
-			} else {
-				massBelow += body.mass;
-			}
-		}
+		// if constexpr (DEBUG_INFO) {
+		// 	if(index == 0) {
+		// 		Utility::logDebug("Star x acceleration: " + std::to_string(body.acceleration.x));
+		// 		Utility::logDebug("Star y acceleration: " + std::to_string(body.acceleration.y));
+		// 	} else if(body.position.y > 0.0) {
+		// 		massAbove += body.mass;
+		// 	} else {
+		// 		massBelow += body.mass;
+		// 	}
+		// }
 
 		body.update();
 	}
@@ -311,7 +336,7 @@ void Universe::simulate(const int& steps, const int& renderInterval, const bool&
 	}
 
 	for(int step = 1; step < steps; step++) {
-		Utility::logInfo("Beginning timestep: " + std::to_string(step));
+		Utility::logInfo("Beginning timestep: " + std::to_string(step) + "\n");
 
 		interactBodies();
 

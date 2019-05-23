@@ -9,8 +9,6 @@
 
 class Body;
 
-// class Bhtree;
-
 class Worker
 {
     private:
@@ -18,6 +16,7 @@ class Worker
         Safequeue<Body *> m_bodiesQueue;
         std::atomic<bool> m_working;
         std::atomic<bool> m_running;
+        std::atomic<bool> m_worked;
 
         std::unique_ptr<Bhtree> m_tree = nullptr;
 
@@ -28,10 +27,13 @@ class Worker
         Worker();
 
         void setTree(std::unique_ptr<Bhtree> &&tree);
+        std::unique_ptr<Bhtree> &&getTree();
+
         void start();
         void stop();
         const bool running() const;
 
         void pushBody(Body *bod);
         const bool working() const;
+        const bool hasWorked() const;
 };

@@ -11,12 +11,12 @@ double Utility::clamp(const double& x) {
 }
 
 void Utility::logInfo(const std::string& message) {
-	std::cout << "\n" << message << std::flush;
+	std::cout << message << std::flush;
 }
 
 void Utility::logDebug(const std::string& message) {
 	if(DEBUG_INFO) {
-		std::cout << "\n" << message << std::flush;
+		std::cout << message << std::flush;
 	}
 }
 

@@ -6,7 +6,7 @@
 
 int main() {
 	// Initialize OpenMP
-	omp_set_num_threads(4);
+	// omp_set_num_threads(4);
 
 	// Simulation settings
 	const int steps = 50;
