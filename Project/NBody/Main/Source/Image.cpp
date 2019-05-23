@@ -1,7 +1,14 @@
 #include "Image.hpp"
 
+#if __GNUC__ >= 8
+	#include <filesystem>
+	using namespace std;
+#else
+	#include <experimental/filesystem>
+	using namespace std::experimental;
+#endif
+
 #include <cmath>
-#include <filesystem>
 #include <fstream>
 
 #include "Body.hpp"
@@ -95,7 +102,7 @@ void Image::createFrame(const int& step, const int& renderInterval, const std::v
 	writeRender(step, renderInterval);
 }
 
-void Image::renderBodies(const std::vector<Body>& bodies, const double& systemSize) {
+void Image::renderBodies(const vector<Body>& bodies, const double& systemSize) {
 	/// ORTHOGONAL PROJECTION
 	for(const auto& body : bodies) {
 		double x = toPixelSpace(body.position.x, width, systemSize);
@@ -114,7 +121,7 @@ void Image::writeRender(const int& step, const int& renderInterval) {
 	}
 
 	// Generate the filename for the image
-	std::filesystem::path name = "./images/Step";
+	filesystem::path name = "./images/Step";
 	int frame = step / renderInterval + 1; // renderInterval;
 	for(int i = (frame == 1000
 		? 1
@@ -125,8 +132,8 @@ void Image::writeRender(const int& step, const int& renderInterval) {
 	name += ".ppm";
 
 	// Generate the image base path if needed
-	if(!std::filesystem::exists(name.parent_path())) {
-		std::filesystem::create_directory(name.parent_path());
+	if(!filesystem::exists(name.parent_path())) {
+		filesystem::create_directory(name.parent_path());
 	}
 
 	// Open a stream for the file

@@ -1,6 +1,13 @@
 #pragma once
 
-#include <filesystem>
+#if __GNUC__ >= 8
+	#include <filesystem>
+	using namespace std;
+#else
+	#include <experimental/filesystem>
+	using namespace std::experimental;
+#endif
+
 #include <vector>
 
 #include "Body.hpp"
@@ -27,7 +34,7 @@ class Universe {
 		Worker *m_downSouthEastWorker = nullptr;
 
 	public:
-		static Universe loadFromCsvFile(const std::filesystem::path& filePath, const double& systemSize);
+		static Universe loadFromCsvFile(const filesystem::path& filePath, const double& systemSize);
 
 		std::vector<Body> bodies;
 
@@ -52,6 +59,6 @@ class Universe {
 		 */
 		void simulate(const int& steps, const int& renderInterval, const bool& createImages, const int& imageWidth = 0, const int& imageHeight = 0);
 
-		void writeToCsvFile(const std::filesystem::path& filePath);
+		void writeToCsvFile(const filesystem::path& filePath);
 };
 

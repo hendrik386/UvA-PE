@@ -10,6 +10,12 @@
 #include "Bhtree.hpp"
 #include "Utility.hpp"
 
+#if __GNUC__ >= 8
+	using namespace std;
+#else
+	using namespace std::experimental;
+#endif
+
 std::vector<Body> Universe::initializeBodies(const int& bodyCount) {
 	std::vector<Body> bodies;
 
@@ -227,7 +233,7 @@ void Universe::updateBodies() {
 	Utility::logDebug("Ratio: " + std::to_string(massBelow / massAbove));
 }
 
-Universe Universe::loadFromCsvFile(const std::filesystem::path& filePath, const double& systemSize) {
+Universe Universe::loadFromCsvFile(const filesystem::path& filePath, const double& systemSize) {
 	std::vector<Body> bodies;
 
 	// Read CSV file
@@ -350,7 +356,7 @@ void Universe::simulate(const int& steps, const int& renderInterval, const bool&
 	Utility::logInfo("We made it\n");
 }
 
-void Universe::writeToCsvFile(const std::filesystem::path& filePath) {
+void Universe::writeToCsvFile(const filesystem::path& filePath) {
 	// Open the file for writing
 	std::ofstream file(filePath);
 
