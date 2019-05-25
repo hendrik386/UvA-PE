@@ -47,5 +47,9 @@ int main(void) {
     //   printf("Reference code: %10.6f seconds \n", ((after.tv_sec + (after.tv_usec / 1000000.0)) -
     //         (before.tv_sec + (before.tv_usec / 1000000.0)))/REP);
 
+    delete[] A;
+    delete[] B;
+    delete[] C;
+
     return 0;
 }
