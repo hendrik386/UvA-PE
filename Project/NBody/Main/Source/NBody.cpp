@@ -5,7 +5,7 @@
 #include "Universe.hpp"
 
 int main() {
-	std::cout << __GNUC__ << std::endl;
+	// std::cout << __GNUC__ << std::endl;
 
 	// Initialize OpenMP
 	// omp_set_num_threads(4);
