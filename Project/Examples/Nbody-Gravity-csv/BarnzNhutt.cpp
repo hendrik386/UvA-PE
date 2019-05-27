@@ -119,9 +119,9 @@ int main(int argc, char *argv[])
 			bodies[index].accel.x = 0.0f;
 			bodies[index].accel.y = 0.0f;
 			bodies[index].accel.z = 0.0f;
-
-			// std::cout << bodies[index] << std::endl;
 			++index;
+
+			if (index == NUM_BODIES) break;
 		}
 
 		std::cout << "\nTotal Disk Mass: " << totalExtraMass;
