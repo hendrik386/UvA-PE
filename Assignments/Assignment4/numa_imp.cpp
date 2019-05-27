@@ -31,12 +31,18 @@ void add(const unsigned int *A, const unsigned int *B, unsigned int *C, const un
     }
 }
 
-void generate_and_add(const unsigned int start, const unsigned int stop, const unsigned int work) {
+void generate_and_add(const unsigned int start, const unsigned int stop, const unsigned int work, double *time) {
+    timeval before, after;
+
     unsigned int *A = generate_intput(start, stop);
     unsigned int *B = generate_intput(start, stop);
     unsigned int *C = new unsigned int[stop - start];
 
+    gettimeofday(&before, NULL); 
     add(A, B, C, 0, work);
+    gettimeofday(&after, NULL);
+
+    *time = (after.tv_sec + (after.tv_usec / 1000000.0)) -(before.tv_sec + (before.tv_usec / 1000000.0));
 
     delete[] A;
     delete[] B;
@@ -44,32 +50,23 @@ void generate_and_add(const unsigned int start, const unsigned int stop, const u
 }
 
 int main(void) {
-    timeval before, after;
-
-    // unsigned int *A = generate_intput(AMOUNT);
-    // unsigned int *B = generate_intput(AMOUNT);
-    // unsigned int *C = new unsigned int[AMOUNT];
 
     const unsigned int work = AMOUNT / 4;
 
-    gettimeofday(&before, NULL); 
+    double time1 = 0, time2 = 0, time3 = 0, time4 = 0;
 
-    // std::thread t1 (add, A, B, C, 0, work);
-    // std::thread t2 (add, A, B, C, work, work * 2);
-    // std::thread t3 (add, A, B, C, work * 2, work * 3);
-    // std::thread t4 (add, A, B, C, work * 3, AMOUNT);
-    std::thread t1 (generate_and_add, 0, work, work);
-    std::thread t2 (generate_and_add, work, work * 2, work);
-    std::thread t3 (generate_and_add, work * 2, work * 3, work);
-    std::thread t4 (generate_and_add, work * 3, AMOUNT, work);
+    std::thread t1 (generate_and_add, 0, work, work, &time1);
+    std::thread t2 (generate_and_add, work, work * 2, work, &time2);
+    std::thread t3 (generate_and_add, work * 2, work * 3, work, &time3);
+    std::thread t4 (generate_and_add, work * 3, AMOUNT, work, &time4);
     t1.join();
     t2.join();
     t3.join();
     t4.join();
     // add(A, B, C, 0, AMOUNT);
-    gettimeofday(&after, NULL);
+    
 
-    std::cout << "time: " << (after.tv_sec + (after.tv_usec / 1000000.0)) -(before.tv_sec + (before.tv_usec / 1000000.0)) << std::endl;
+    std::cout << "time: " << time1 + time2 + time3 + time4 << std::endl;
 
     return 0;
 }
