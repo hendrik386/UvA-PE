@@ -4,7 +4,7 @@
 
 #include "Universe.hpp"
 
-int main() {
+int main(int argc, char *argv[]) {
 	// std::cout << __GNUC__ << std::endl;
 
 	// Initialize OpenMP
@@ -20,16 +20,44 @@ int main() {
 	const int imageHeight = 1024;
 
 	// Universe settings
-	const int bodyCount = 1024 * 64;
+	int bodyCount = 0;
 	const double systemSize = 3.5;
 
 	timeval before, after;
 
+	if (argc == 2) {
+			std::cout << "2" << std::endl;
+
+		bodyCount = std::atoi(argv[1]);
+		Universe universe(bodyCount, systemSize);
+
+		gettimeofday(&before, NULL);
+		universe.simulate(steps, renderInterval, createImage, imageWidth, imageHeight);
+		gettimeofday(&after, NULL);
+	}
+	else if (argc == 3) {
+		bodyCount = std::atoi(argv[2]);
+		Universe universe = Universe::loadFromCsvFile(argv[1], systemSize, bodyCount);
+
+		gettimeofday(&before, NULL);
+		universe.simulate(steps, renderInterval, createImage, imageWidth, imageHeight);
+		gettimeofday(&after, NULL);
+	}
+	else
+	{
+			std::cout << "1" << std::endl;
+
+		bodyCount = 1024 * 64;
+		Universe universe(bodyCount, systemSize);
+
+		gettimeofday(&before, NULL);
+		universe.simulate(steps, renderInterval, createImage, imageWidth, imageHeight);
+		gettimeofday(&after, NULL);
+	}
+
+
 	// Perform the actual simulation
 	Universe universe(bodyCount, systemSize);
-	gettimeofday(&before, NULL);
-	universe.simulate(steps, renderInterval, createImage, imageWidth, imageHeight);
-	gettimeofday(&after, NULL);
 	std::cout << "Time: " <<(double)(after.tv_sec - before.tv_sec) + (double)(after.tv_usec - before.tv_usec) / 1e6 << std::endl;
 
 	return 0;

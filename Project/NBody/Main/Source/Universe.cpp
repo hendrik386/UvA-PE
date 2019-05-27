@@ -261,6 +261,37 @@ Universe Universe::loadFromCsvFile(const filesystem::path& filePath, const doubl
 	return Universe(bodies, systemSize);
 }
 
+Universe Universe::loadFromCsvFile(const filesystem::path& filePath, const double& systemSize, const int bodyCount){
+	std::vector<Body> bodies;
+
+	io::CSVReader<8> in(filePath);
+	in.read_header(io::ignore_extra_column, "x", "y", "z", "vx", "vy", "vz", "m", "id");
+	double positionX;
+	double positionY;
+	double positionZ;
+	double velocityX;
+	double velocityY;
+	double velocityZ;
+	double mass;
+	unsigned int id;
+
+
+	double setMass = (EXTRA_MASS * SOLAR_MASS) / bodyCount;
+	unsigned int index = 0;
+	while(in.read_row(positionX, positionY, positionZ, velocityX, velocityY, velocityZ, mass, id)) {
+		bodies.emplace_back(
+			Vector3D(positionX, positionY, positionZ),
+			Vector3D(velocityX, velocityY, velocityZ),
+			Vector3D(0, 0, 0),
+			setMass
+		);
+
+		if (index++ == bodyCount) break;
+	}
+
+	return Universe(bodies, systemSize);
+}
+
 Universe::Universe(std::vector<Body> bodies, const double& systemSize) : bodies(std::move(bodies)), systemSize(systemSize) {
 	Utility::logInfo(std::to_string(SYSTEM_THICKNESS) + "AU thick disk\n");
 
