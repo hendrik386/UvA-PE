@@ -1,10 +1,8 @@
 0.08AU thick disk
 
-Total Disk Mass: 2.99963e+30
+Total Disk Mass: 2.9992e+30
 Each Particle weight: 4.6875e+25
 ______________________________
-run
-
 
 Beginning timestep: 1
 Beginning timestep: 2
@@ -55,6 +53,7 @@ Beginning timestep: 46
 Beginning timestep: 47
 Beginning timestep: 48
 Beginning timestep: 49
-Time: 184.238
+Writing frame 50
+Time: 94.6036
 
 we made it

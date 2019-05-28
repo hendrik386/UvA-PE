@@ -3,8 +3,9 @@
 Total Disk Mass: 3e+30
 Each Particle weight: 4.6875e+25
 ______________________________
+run
 
-Writing frame 1
+
 Beginning timestep: 1
 Beginning timestep: 2
 Beginning timestep: 3
@@ -54,6 +55,6 @@ Beginning timestep: 46
 Beginning timestep: 47
 Beginning timestep: 48
 Beginning timestep: 49
-Time: 157.254
+Time: 166.515
 
 we made it
