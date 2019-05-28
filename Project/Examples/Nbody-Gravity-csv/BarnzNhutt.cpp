@@ -123,6 +123,9 @@ int main(int argc, char *argv[])
 
 			if (index == NUM_BODIES) break;
 		}
+		if (index < NUM_BODIES) {
+			NUM_BODIES = index;
+		}
 
 		std::cout << "\nTotal Disk Mass: " << totalExtraMass;
 		std::cout << "\nEach Particle weight: " << setMass
@@ -138,7 +141,7 @@ int main(int argc, char *argv[])
 	// bodies = new struct body[NUM_BODIES];
 	// initializeBodies(bodies);
 
-
+	std::cout << "run\n" << std::endl;
 
 	timeval before, after;
 	gettimeofday(&before, NULL);
@@ -211,16 +214,16 @@ void initializeBodies(struct body* bods)
 
 void runSimulation(struct body* b, char* image, double* hdImage)
 {
-	createFrame(image, hdImage, b, 1);
+	// createFrame(image, hdImage, b, 1);
 	for (int step=1; step<STEP_COUNT; step++)
 	{
 		std::cout << "\nBeginning timestep: " << step;
 		interactBodies(b);
 
-		if (step%RENDER_INTERVAL==0)
-		{
-			createFrame(image, hdImage, b, step + 1);
-		}
+		// if (step%RENDER_INTERVAL==0)
+		// {
+		// 	createFrame(image, hdImage, b, step + 1);
+		// }
 		if (DEBUG_INFO) {std::cout << "\n-------Done------- timestep: " << step << "\n" << std::flush;}
 	}
 }
@@ -244,7 +247,6 @@ void interactBodies(struct body* bods)
 	center->z = 0.1374; /// Does this help?
 	Octant *root = new Octant(center, 60*SYSTEM_SIZE);
 	Bhtree *tree = new Bhtree(root);
-
 	for (int bIndex=1; bIndex<NUM_BODIES; bIndex++)
 	{
 		if (root->contains(bods[bIndex].position))

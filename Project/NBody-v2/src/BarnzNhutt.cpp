@@ -105,6 +105,10 @@ int main(int argc, char *argv[])
 			if (index == NUM_BODIES) break;
 		}
 
+		if (index < NUM_BODIES) {
+			NUM_BODIES = index;
+		}
+
 		std::cout << "\nTotal Disk Mass: " << totalExtraMass;
 		std::cout << "\nEach Particle weight: " << setMass
 			  << "\n______________________________\n";

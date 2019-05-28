@@ -261,7 +261,7 @@ Universe Universe::loadFromCsvFile(const filesystem::path& filePath, const doubl
 	return Universe(bodies, systemSize);
 }
 
-Universe Universe::loadFromCsvFile(const filesystem::path& filePath, const double& systemSize, const int bodyCount){
+Universe Universe::loadFromCsvFile(const filesystem::path& filePath, const double& systemSize, int &bodyCount){
 	std::vector<Body> bodies;
 
 	io::CSVReader<8> in(filePath);
@@ -287,6 +287,9 @@ Universe Universe::loadFromCsvFile(const filesystem::path& filePath, const doubl
 		);
 
 		if (index++ == bodyCount) break;
+	}
+	if (index < bodyCount) {
+		bodyCount = index;
 	}
 
 	return Universe(bodies, systemSize);

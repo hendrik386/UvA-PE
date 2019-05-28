@@ -35,7 +35,7 @@ class Universe {
 
 	public:
 		static Universe loadFromCsvFile(const filesystem::path& filePath, const double& systemSize);
-		static Universe loadFromCsvFile(const filesystem::path& filePath, const double& systemSize, const int bodyCount);
+		static Universe loadFromCsvFile(const filesystem::path& filePath, const double& systemSize, int &bodyCount);
 
 		std::vector<Body> bodies;
 
