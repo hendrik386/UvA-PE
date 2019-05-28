@@ -169,6 +169,9 @@ void Bhtree::insert(Body& body) {
 void Bhtree::interact(Body* body) {
 	if(isExternal()) {
 		if(rootBody != body) {
+			if (body == nullptr || rootBody == nullptr) {
+				return;
+			}
 			Body::singleInteraction(*body, *rootBody, true, true, false, true, false);
 		}
 	} else if(rootOctant.getLength() / rootBody->magnitude(*body) < MAX_DISTANCE) {

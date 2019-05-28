@@ -26,8 +26,6 @@ int main(int argc, char *argv[]) {
 	timeval before, after;
 
 	if (argc == 2) {
-			std::cout << "2" << std::endl;
-
 		bodyCount = std::atoi(argv[1]);
 		Universe universe(bodyCount, systemSize);
 
@@ -45,8 +43,6 @@ int main(int argc, char *argv[]) {
 	}
 	else
 	{
-			std::cout << "1" << std::endl;
-
 		bodyCount = 1024 * 64;
 		Universe universe(bodyCount, systemSize);
 
@@ -57,7 +53,6 @@ int main(int argc, char *argv[]) {
 
 
 	// Perform the actual simulation
-	Universe universe(bodyCount, systemSize);
 	std::cout << "Time: " <<(double)(after.tv_sec - before.tv_sec) + (double)(after.tv_usec - before.tv_usec) / 1e6 << std::endl;
 
 	return 0;
